@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "815597164494",
+    "project_id": "onestop-bef04",
+    "storage_bucket": "onestop-bef04.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815597164494:android:1c3b1d4a9e687da5703d9f",
+        "android_client_info": {
+          "package_name": "com.example.onestop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "815597164494-okvlgi6eijp17gaanvrsc7k55d13vld8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNcvgGk2WYRA2K404uXIiENZAxyr4yoUU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "815597164494-okvlgi6eijp17gaanvrsc7k55d13vld8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
