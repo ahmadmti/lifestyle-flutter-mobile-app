@@ -4,8 +4,7 @@ import 'package:rxdart/rxdart.dart';
 
 class NewEntryBloc {
   BehaviorSubject<MedicineType> _selectedMedicineType$;
-  BehaviorSubject<MedicineType> get selectedMedicineType =>
-      _selectedMedicineType$.stream;
+  BehaviorSubject<MedicineType> get selectedMedicineType => _selectedMedicineType$.stream;
 
   BehaviorSubject<int> _selectedInterval$;
   BehaviorSubject<int> get selectedInterval$ => _selectedInterval$;
@@ -17,8 +16,7 @@ class NewEntryBloc {
   BehaviorSubject<EntryError> get errorState$ => _errorState$;
 
   NewEntryBloc() {
-    _selectedMedicineType$ =
-        BehaviorSubject<MedicineType>.seeded(MedicineType.None);
+    _selectedMedicineType$ = BehaviorSubject<MedicineType>.seeded(MedicineType.None);
 
     _selectedTimeOfDay$ = BehaviorSubject<String>.seeded("None");
     _selectedInterval$ = BehaviorSubject<int>.seeded(0);
@@ -41,6 +39,7 @@ class NewEntryBloc {
   }
 
   void updateTime(String time) {
+    print("time: $time");
     _selectedTimeOfDay$.add(time);
   }
 
