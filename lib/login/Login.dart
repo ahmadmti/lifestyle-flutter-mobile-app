@@ -162,8 +162,8 @@ class _loginClassState extends State<loginClass> {
             Map userDataMap = {
               "name": signUpModel.name.trim(),
               "email": signUpModel.email.trim(),
-              "dob": signUpModel.dob.trim(),
-              "gender": signUpModel.gender.trim(),
+              "dob": signUpModel.dob.trim()??'',
+              "gender": signUpModel.gender.trim()??'',
             };
             usersRef.child(result.uid).set(userDataMap);
             SharedPreferences prefs = await SharedPreferences.getInstance();

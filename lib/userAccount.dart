@@ -20,7 +20,7 @@ class userAccount extends StatefulWidget {
 }
 
 class userAccountState extends State<userAccount> {
-  var name = '', email = '', gender = '', dob = '', img;
+  var name , email , gender , dob , img;
   @override
   void initState() {
     // TODO: implement initState
@@ -80,7 +80,7 @@ class userAccountState extends State<userAccount> {
               ],
             ),
             title: Text("Full Name"),
-            subtitle: Text(name),
+            subtitle: Text(name??''),
           ),
           Divider(),
           ListTile(
@@ -94,7 +94,7 @@ class userAccountState extends State<userAccount> {
               ],
             ),
             title: Text("Email Address"),
-            subtitle: Text(email),
+            subtitle: Text(email??''),
           ),
           Divider(
               // color: Colors.black
@@ -109,7 +109,7 @@ class userAccountState extends State<userAccount> {
               ],
             ),
             title: Text("Gender"),
-            subtitle: Text(gender),
+            subtitle: Text(gender??''),
           ),
           Divider(
               // color: Colors.black
@@ -124,7 +124,7 @@ class userAccountState extends State<userAccount> {
               ],
             ),
             title: Text("Date of Birth"),
-            subtitle: Text(dob),
+            subtitle: Text(dob??''),
           ),
         ],
       ),

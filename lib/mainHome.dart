@@ -93,8 +93,8 @@ class mainHomeState extends State<mainHome> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               new UserAccountsDrawerHeader(
-                accountName: new Text(name),
-                accountEmail: new Text(FirebaseAuth.instance.currentUser.email),
+                accountName: new Text(name??''), 
+                accountEmail: new Text(FirebaseAuth.instance.currentUser.email?? ''),
                 currentAccountPicture: new CircleAvatar(
                   backgroundImage:
                       new NetworkImage('https://i.pinimg.com/originals/51/f6/fb/51f6fb256629fc755b8870c801092942.png'),
