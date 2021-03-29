@@ -31,8 +31,12 @@ class _SuccessScreenState extends State<SuccessScreen> {
         child: Container(
           child: Center(
             child: Text(
-              "Your Data has \nSuccessfully Added",
+              
+              
+              "Your Data has been \nSuccessfully Added",
+              textAlign: TextAlign.center,
               style: TextStyle(
+                
                 color: Colors.blue,
                 fontSize: 22,
                 fontWeight: FontWeight.w700,

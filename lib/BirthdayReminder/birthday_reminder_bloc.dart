@@ -46,14 +46,14 @@ class GlobalBlocBirthday {
     Map<String, dynamic> tempMap = newBirthday.toJson();
     SharedPreferences sharedUser = await SharedPreferences.getInstance();
     String newBirthdayJson = jsonEncode(tempMap);
-    List<String> medicineJsonList = [];
+    List<String> birthdayJsonList = [];
     if (sharedUser.getStringList('birthdays') == null) {
-      medicineJsonList.add(newBirthdayJson);
+      birthdayJsonList.add(newBirthdayJson);
     } else {
-      medicineJsonList = sharedUser.getStringList('birthdays');
-      medicineJsonList.add(newBirthdayJson);
+      birthdayJsonList = sharedUser.getStringList('birthdays');
+      birthdayJsonList.add(newBirthdayJson);
     }
-    sharedUser.setStringList('birthdays', medicineJsonList);
+    sharedUser.setStringList('birthdays', birthdayJsonList);
   }
 
   Future makeBirthdayList() async {

@@ -106,7 +106,7 @@ class _NewEntryBirthdayState extends State<NewEntryBirthday> {
               ),
               TextFormField(
                 controller: noteController,
-                keyboardType: TextInputType.multiline,
+                keyboardType: TextInputType.text,
                 style: TextStyle(
                   fontSize: 16,
                 ),
@@ -173,16 +173,13 @@ class _NewEntryBirthdayState extends State<NewEntryBirthday> {
                         return;
                       }
 
-                                            String birthdayName;
+                      String birthdayName;
                       if (nameController.text != "") {
                         birthdayName = nameController.text;
                       }
-                     
-                                       
-                     String   birthdayNote = noteController.text;
-                      
-                     
-                     
+
+                      String birthdayNote = noteController.text;
+
                       var selectedInterval;
                       _newEntryBloc.selectedInterval$.forEach((element) {
                         selectedInterval = element;
@@ -192,7 +189,7 @@ class _NewEntryBirthdayState extends State<NewEntryBirthday> {
                       _newEntryBloc.selectedTimeOfDay$.forEach((element) {
                         selectedTimeOfDay = element;
                       });
-                     
+
                       var selectedDate;
                       _newEntryBloc.selectedDate$.forEach((element) {
                         selectedDate = element;
@@ -200,9 +197,7 @@ class _NewEntryBirthdayState extends State<NewEntryBirthday> {
 
                       //---------------------------------------------------------
 
-                     
                       Timer(Duration(seconds: 1), () {
-                        
                         if (selectedInterval == 0) {
                           _newEntryBloc.submitError(EntryError.Interval);
                           return;
@@ -212,7 +207,7 @@ class _NewEntryBirthdayState extends State<NewEntryBirthday> {
                           _newEntryBloc.submitError(EntryError.StartTime);
                           return;
                         }
-                      
+
                         if (selectedDate == "None") {
                           _newEntryBloc.submitError(EntryError.StartDate);
                           return;
@@ -307,7 +302,7 @@ class IntervalSelection extends StatefulWidget {
 
 class _IntervalSelectionState extends State<IntervalSelection> {
   var _intervals = [
-    0,
+    1,
     6,
     8,
     10,
@@ -350,7 +345,7 @@ class _IntervalSelectionState extends State<IntervalSelection> {
                 return DropdownMenuItem<int>(
                   value: value,
                   child: Text(
-                    value == 0 ? "On time" : "${value.toString()}h",
+                     "${value.toString()}h",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 18,
@@ -362,7 +357,7 @@ class _IntervalSelectionState extends State<IntervalSelection> {
               onChanged: (newVal) {
                 setState(() {
                   _selected = newVal;
-                  _newEntryBloc.updateInterval(newVal);
+                  _newEntryBloc.updateInterval( newVal);
                 });
               },
             ),

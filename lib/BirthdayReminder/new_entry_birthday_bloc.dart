@@ -40,7 +40,7 @@ class NewEntryBirthdayBloc {
   }
 
   void updateDate(String date) {
-    print("date: $date");
+    print("time: $date");
     _selectedDate$.add(date);
   }
   
