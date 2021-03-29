@@ -20,6 +20,7 @@ import 'package:lifestyle/emergency/emergency.dart';
 import 'package:lifestyle/motivation.dart';
 import 'package:lifestyle/userAccount.dart';
 
+import 'financeHome.dart';
 import 'motivation.dart';
 
 class mainHome extends StatefulWidget {

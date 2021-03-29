@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -29,15 +30,16 @@ Future<void> main() async {
   FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
   AndroidInitializationSettings android = AndroidInitializationSettings('logo');
   IOSInitializationSettings ios = IOSInitializationSettings();
-  InitializationSettings settings = InitializationSettings(
-      android: android,iOS: ios
-  );
+  InitializationSettings settings = InitializationSettings(android: android, iOS: ios);
   await notificationsPlugin.initialize(
     settings,
   );
 
-  print (FirebaseAuth.instance.currentUser);
-  runApp(MyApp());
+  print(FirebaseAuth.instance.currentUser);
+
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
+    runApp(new MyApp());
+  });
 }
 
 void url_launcher(String Url) async {
@@ -47,55 +49,50 @@ void url_launcher(String Url) async {
     throw 'Could Not open the link';
   }
 }
-DatabaseReference usersRef=FirebaseDatabase.instance.reference().child("users");
+
+DatabaseReference usersRef = FirebaseDatabase.instance.reference().child("users");
+
 class MyApp extends StatelessWidget {
-  static FlutterLocalNotificationsPlugin notifications =
-  FlutterLocalNotificationsPlugin();
+  static FlutterLocalNotificationsPlugin notifications = FlutterLocalNotificationsPlugin();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-        ChangeNotifierProvider<AuthProvider>(
-        create: (context) => AuthProvider(),
-    ),
-    ChangeNotifierProxyProvider<AuthProvider,HomeProvider>(
-    create: (context) => HomeProvider(),
-    update: (context, authProvider, homeProvider) => homeProvider..update(authProvider.user),
-    ),
-    ChangeNotifierProxyProvider<AuthProvider,StatisticsProvider>(
-    create: (context) => StatisticsProvider(),
-    update: (context, authProvider, statisticsProvider) => statisticsProvider..update(authProvider.user),
-    ),
-          ChangeNotifierProvider<AirportViewModel>(
-              create: (context) => locator<AirportViewModel>()),
-          ChangeNotifierProvider<ItemViewModel>(
-              create: (context) => locator<ItemViewModel>()),
-          ChangeNotifierProvider<SearchViewModel>(
-              create: (context) => locator<SearchViewModel>()),
-          ChangeNotifierProvider<CalendarViewModel>(
-              create: (context) => locator<CalendarViewModel>()),
-    ],
-
-      child:MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: welcomePage(),
-      routes: <String, WidgetBuilder>{
-        '/dietPlan': (BuildContext context) => new dietPlan(),
-        '/dietDetialScreen': (BuildContext context) => new dietDetialScreen(),
-      },
-    )
-
-    );
+          ChangeNotifierProvider<AuthProvider>(
+            create: (context) => AuthProvider(),
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, HomeProvider>(
+            create: (context) => HomeProvider(),
+            update: (context, authProvider, homeProvider) => homeProvider..update(authProvider.user),
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, StatisticsProvider>(
+            create: (context) => StatisticsProvider(),
+            update: (context, authProvider, statisticsProvider) => statisticsProvider..update(authProvider.user),
+          ),
+          ChangeNotifierProvider<AirportViewModel>(create: (context) => locator<AirportViewModel>()),
+          ChangeNotifierProvider<ItemViewModel>(create: (context) => locator<ItemViewModel>()),
+          ChangeNotifierProvider<SearchViewModel>(create: (context) => locator<SearchViewModel>()),
+          ChangeNotifierProvider<CalendarViewModel>(create: (context) => locator<CalendarViewModel>()),
+        ],
+        child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: welcomePage(),
+          routes: <String, WidgetBuilder>{
+            '/dietPlan': (BuildContext context) => new dietPlan(),
+            '/dietDetialScreen': (BuildContext context) => new dietDetialScreen(),
+          },
+        ));
   }
+
   void _initializeLocalNotificationsPlugin(BuildContext context) {
     var settingsAndroid = AndroidInitializationSettings('ic_stat_alarm');
     var settingsIOS = IOSInitializationSettings();
     notifications.initialize(
-      InitializationSettings(android:settingsAndroid, iOS:settingsIOS),
+      InitializationSettings(android: settingsAndroid, iOS: settingsIOS),
       onSelectNotification: (payload) {
         _onSelectNotification(context, payload);
       },
