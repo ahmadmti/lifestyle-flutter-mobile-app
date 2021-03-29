@@ -31,7 +31,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
         child: Container(
           child: Center(
             child: Text(
-              "Your Medicine has \nSuccessfully Added",
+              "Your Data has \nSuccessfully Added",
               style: TextStyle(
                 color: Colors.blue,
                 fontSize: 22,

@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:lifestyle/BirthdayReminder/new_entry_birthday_bloc.dart';
 import 'package:lifestyle/FitnessPlan/calculator/screens/homePage.dart';
 import 'package:lifestyle/Reminder/MedicalReminder/common/convert_time.dart';
 import 'package:lifestyle/Reminder/MedicalReminder/global_bloc.dart';
+import 'package:lifestyle/Reminder/MedicalReminder/models/birthday.dart';
 import 'package:lifestyle/Reminder/MedicalReminder/models/errors.dart';
 import 'package:lifestyle/Reminder/MedicalReminder/models/medicine.dart';
 import 'package:lifestyle/Reminder/MedicalReminder/models/medicine_type.dart';
@@ -12,31 +15,33 @@ import 'package:lifestyle/Reminder/MedicalReminder/ui/success_screen/success_scr
 import 'package:provider/provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-class NewEntry extends StatefulWidget {
+import 'birthday_reminder_bloc.dart';
+
+class NewEntryBirthday extends StatefulWidget {
   @override
-  _NewEntryState createState() => _NewEntryState();
+  _NewEntryBirthdayState createState() => _NewEntryBirthdayState();
 }
 
-class _NewEntryState extends State<NewEntry> {
+class _NewEntryBirthdayState extends State<NewEntryBirthday> {
   TextEditingController nameController;
-  TextEditingController dosageController;
+  TextEditingController noteController;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-  NewEntryBloc _newEntryBloc;
+  NewEntryBirthdayBloc _newEntryBloc;
 
   GlobalKey<ScaffoldState> _scaffoldKey;
 
   void dispose() {
     super.dispose();
     nameController.dispose();
-    dosageController.dispose();
+    noteController.dispose();
     _newEntryBloc.dispose();
   }
 
   void initState() {
     super.initState();
-    _newEntryBloc = NewEntryBloc();
+    _newEntryBloc = NewEntryBirthdayBloc();
     nameController = TextEditingController();
-    dosageController = TextEditingController();
+    noteController = TextEditingController();
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -45,7 +50,7 @@ class _NewEntryState extends State<NewEntry> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
+    final GlobalBlocBirthday _globalBloc = Provider.of<GlobalBlocBirthday>(context);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -57,7 +62,7 @@ class _NewEntryState extends State<NewEntry> {
         ),
         centerTitle: true,
         title: Text(
-          "Add New Reminders ",
+          "Add New Reminders",
           style: TextStyle(
             color: Colors.white,
             fontSize: 18,
@@ -65,7 +70,7 @@ class _NewEntryState extends State<NewEntry> {
         ),
       ),
       body: Container(
-        child: Provider<NewEntryBloc>.value(
+        child: Provider<NewEntryBirthdayBloc>.value(
           value: _newEntryBloc,
           child: ListView(
             padding: EdgeInsets.symmetric(
@@ -76,7 +81,7 @@ class _NewEntryState extends State<NewEntry> {
                 height: 15,
               ),
               PanelTitle(
-                title: "Medicine Name",
+                title: "Birthday Name",
                 isRequired: true,
               ),
               SizedBox(
@@ -93,19 +98,18 @@ class _NewEntryState extends State<NewEntry> {
                 ),
               ),
               PanelTitle(
-                title: "Dosage in mg",
+                title: "Note",
                 isRequired: false,
               ),
               SizedBox(
                 height: 15,
               ),
               TextFormField(
-                controller: dosageController,
-                keyboardType: TextInputType.number,
+                controller: noteController,
+                keyboardType: TextInputType.multiline,
                 style: TextStyle(
                   fontSize: 16,
                 ),
-                textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
                   border: UnderlineInputBorder(),
                 ),
@@ -115,41 +119,11 @@ class _NewEntryState extends State<NewEntry> {
               ),
 
               PanelTitle(
-                title: "Medicine Type",
-                isRequired: false,
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10.0),
-                child: StreamBuilder<MedicineType>(
-                  stream: _newEntryBloc.selectedMedicineType,
-                  builder: (context, snapshot) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        MedicineTypeColumn(
-                            type: MedicineType.Pill,
-                            name: "Pill",
-                            iconValue: 0xe901,
-                            isSelected: snapshot.data == MedicineType.Pill ? true : false),
-                        MedicineTypeColumn(
-                            type: MedicineType.Syringe,
-                            name: "Syringe",
-                            iconValue: 0xe902,
-                            isSelected: snapshot.data == MedicineType.Syringe ? true : false),
-                      ],
-                    );
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              PanelTitle(
                 title: "Interval Selection",
                 isRequired: true,
               ),
               SizedBox(
-                height: 20,
+                height: 15,
               ),
               //ScheduleCheckBoxes(),
               IntervalSelection(),
@@ -157,7 +131,16 @@ class _NewEntryState extends State<NewEntry> {
                 height: 20,
               ),
               PanelTitle(
-                title: "Starting Time",
+                title: "Reminder Date",
+                isRequired: true,
+              ),
+              SelectDate(),
+              SizedBox(
+                height: 15,
+              ),
+
+              PanelTitle(
+                title: "Reminder Time",
                 isRequired: true,
               ),
               SelectTime(),
@@ -173,7 +156,7 @@ class _NewEntryState extends State<NewEntry> {
                     shape: StadiumBorder(),
                     child: Center(
                       child: Text(
-                        "Add Medicine",
+                        "Add Birthday",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -182,8 +165,6 @@ class _NewEntryState extends State<NewEntry> {
                       ),
                     ),
                     onPressed: () async {
-                      String medicineName;
-                      int dosage;
                       //--------------------Error Checking------------------------
                       //Had to do error checking in UI
                       //Due to unoptimized BLoC value-grabbing architecture
@@ -191,25 +172,17 @@ class _NewEntryState extends State<NewEntry> {
                         _newEntryBloc.submitError(EntryError.NameNull);
                         return;
                       }
+
+                                            String birthdayName;
                       if (nameController.text != "") {
-                        medicineName = nameController.text;
+                        birthdayName = nameController.text;
                       }
-                      if (dosageController.text == "") {
-                        dosage = 0;
-                      }
-                      if (dosageController.text != "") {
-                        dosage = int.parse(dosageController.text);
-                      }
-
-//validations
-                      var name;
-                      _globalBloc.medicineList$.forEach((element) {
-                        // print("el: $element");
-                        element.forEach((element) {
-                          name = element.getName;
-                        });
-                      });
-
+                     
+                                       
+                     String   birthdayNote = noteController.text;
+                      
+                     
+                     
                       var selectedInterval;
                       _newEntryBloc.selectedInterval$.forEach((element) {
                         selectedInterval = element;
@@ -219,29 +192,17 @@ class _NewEntryState extends State<NewEntry> {
                       _newEntryBloc.selectedTimeOfDay$.forEach((element) {
                         selectedTimeOfDay = element;
                       });
+                     
+                      var selectedDate;
+                      _newEntryBloc.selectedDate$.forEach((element) {
+                        selectedDate = element;
+                      });
 
                       //---------------------------------------------------------
-                      String medicineType;
-                      _newEntryBloc.selectedMedicineType.forEach((element) {
-                        medicineType = element.toString().substring(13);
-                      });
 
-                      int interval;
-                      _newEntryBloc.selectedInterval$.forEach((element) {
-                        interval = element;
-                      });
-
-                      String startTime;
-                      _newEntryBloc.selectedTimeOfDay$.forEach((element) {
-                        startTime = element;
-                      });
-
+                     
                       Timer(Duration(seconds: 1), () {
-                        if (medicineName == name) {
-                          _newEntryBloc.submitError(EntryError.NameDuplicate);
-                          return;
-                        }
-
+                        
                         if (selectedInterval == 0) {
                           _newEntryBloc.submitError(EntryError.Interval);
                           return;
@@ -251,20 +212,25 @@ class _NewEntryState extends State<NewEntry> {
                           _newEntryBloc.submitError(EntryError.StartTime);
                           return;
                         }
+                      
+                        if (selectedDate == "None") {
+                          _newEntryBloc.submitError(EntryError.StartDate);
+                          return;
+                        }
 
-                        List<int> intIDs = makeIDs(24 / interval);
+                        List<int> intIDs = makeIDs(24 / selectedInterval);
                         List<String> notificationIDs = intIDs.map((i) => i.toString()).toList(); //for Shared preference
 
-                        Medicine newEntryMedicine = Medicine(
+                        Birthday newEntryBirthday = Birthday(
                           notificationIDs: notificationIDs,
-                          medicineName: medicineName,
-                          dosage: dosage,
-                          medicineType: medicineType,
-                          interval: interval,
-                          startTime: startTime,
+                          birthdayName: birthdayName,
+                          birthdayNote: birthdayNote,
+                          interval: selectedInterval,
+                          time: selectedTimeOfDay,
+                          date: selectedDate,
                         );
 
-                        _globalBloc.updateMedicineList(newEntryMedicine);
+                        _globalBloc.updateBirthdayList(newEntryBirthday);
 
                         Navigator.pushReplacement(
                           context,
@@ -291,7 +257,7 @@ class _NewEntryState extends State<NewEntry> {
       (EntryError error) {
         switch (error) {
           case EntryError.NameNull:
-            displayError("Please enter the medicine's name");
+            displayError("Please enter the name");
             break;
           case EntryError.NameDuplicate:
             displayError("Medicine name already exists");
@@ -302,8 +268,11 @@ class _NewEntryState extends State<NewEntry> {
           case EntryError.Interval:
             displayError("Please select the reminder's interval");
             break;
+          case EntryError.StartDate:
+            displayError("Please select the reminder's date");
+            break;
           case EntryError.StartTime:
-            displayError("Please select the reminder's starting time");
+            displayError("Please select the reminder's time");
             break;
           default:
         }
@@ -338,6 +307,7 @@ class IntervalSelection extends StatefulWidget {
 
 class _IntervalSelectionState extends State<IntervalSelection> {
   var _intervals = [
+    0,
     6,
     8,
     10,
@@ -348,7 +318,7 @@ class _IntervalSelectionState extends State<IntervalSelection> {
 
   @override
   Widget build(BuildContext context) {
-    final NewEntryBloc _newEntryBloc = Provider.of<NewEntryBloc>(context);
+    final NewEntryBirthdayBloc _newEntryBloc = Provider.of<NewEntryBirthdayBloc>(context);
     return Padding(
       padding: EdgeInsets.only(top: 8.0),
       child: Container(
@@ -356,7 +326,7 @@ class _IntervalSelectionState extends State<IntervalSelection> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Remind me every",
+              "Remind me before",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 18,
@@ -380,7 +350,7 @@ class _IntervalSelectionState extends State<IntervalSelection> {
                 return DropdownMenuItem<int>(
                   value: value,
                   child: Text(
-                    value.toString(),
+                    value == 0 ? "On time" : "${value.toString()}h",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 18,
@@ -403,6 +373,66 @@ class _IntervalSelectionState extends State<IntervalSelection> {
   }
 }
 
+class SelectDate extends StatefulWidget {
+  @override
+  _SelectDateState createState() => _SelectDateState();
+}
+
+class _SelectDateState extends State<SelectDate> {
+  var _date;
+  bool _clicked = false;
+  NewEntryBirthdayBloc _newEntryBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _newEntryBloc = Provider.of<NewEntryBirthdayBloc>(context);
+
+    return Container(
+      height: 60,
+      child: Padding(
+        padding: EdgeInsets.only(top: 10.0, bottom: 0),
+        child: FlatButton(
+          color: Colors.blue,
+          shape: StadiumBorder(),
+          onPressed: () {
+            showDatePicker(
+              context: context,
+              firstDate: DateTime.now(),
+              initialDate: DateTime.now(),
+              lastDate: DateTime(3000),
+            ).then((value) {
+              if (value != null && value != _date) {
+                setState(() {
+                  _date = DateFormat('dd-MM-yyyy').format(value);
+                  _clicked = true;
+
+                  _newEntryBloc.updateDate(_date);
+                });
+              }
+            });
+          },
+          child: Center(
+            child: Text(
+              _clicked == false ? "Pick Date" : "$_date",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class SelectTime extends StatefulWidget {
   @override
   _SelectTimeState createState() => _SelectTimeState();
@@ -411,35 +441,17 @@ class SelectTime extends StatefulWidget {
 class _SelectTimeState extends State<SelectTime> {
   TimeOfDay _time = TimeOfDay(hour: 0, minute: 00);
   bool _clicked = false;
-  NewEntryBloc _newEntryBloc;
-
-  // Future<TimeOfDay> _selectTime(BuildContext context) async {
-  //   final NewEntryBloc _newEntryBloc = Provider.of<NewEntryBloc>(context);
-
-  //   final TimeOfDay picked = await showTimePicker(
-  //     context: context,
-  //     initialTime: _time,
-  //   );
-  //   if (picked != null && picked != _time) {
-  //     setState(() {
-  //       _time = picked;
-  //       _clicked = true;
-  //       _newEntryBloc.updateTime("${convertTime(_time.hour.toString())}" + "${convertTime(_time.minute.toString())}");
-  //     });
-  //   }
-  //   return picked;
-  // }
+  NewEntryBirthdayBloc _newEntryBloc;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
   }
 
   @override
   Widget build(BuildContext context) {
-    _newEntryBloc = Provider.of<NewEntryBloc>(context);
+    _newEntryBloc = Provider.of<NewEntryBirthdayBloc>(context);
 
     return Container(
       height: 60,
@@ -478,69 +490,6 @@ class _SelectTimeState extends State<SelectTime> {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class MedicineTypeColumn extends StatelessWidget {
-  final MedicineType type;
-  final String name;
-  final int iconValue;
-  final bool isSelected;
-
-  MedicineTypeColumn(
-      {Key key, @required this.type, @required this.name, @required this.iconValue, @required this.isSelected})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final NewEntryBloc _newEntryBloc = Provider.of<NewEntryBloc>(context);
-    return GestureDetector(
-      onTap: () {
-        _newEntryBloc.updateSelectedMedicine(type);
-      },
-      child: Column(
-        children: <Widget>[
-          /*  Container(
-            width: 85,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: isSelected ? Colors.blue : Colors.white,
-            ),
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: 14.0),
-                child: Icon(
-                  IconData(iconValue, fontFamily: "Ic"),
-                  size: 75,
-                  color: isSelected ? Colors.white : Colors.blue,
-                ),
-              ),
-            ),
-          ),*/
-          Padding(
-            padding: EdgeInsets.only(top: 8.0),
-            child: Container(
-              width: 80,
-              height: 30,
-              decoration: BoxDecoration(
-                color: isSelected ? Colors.blue : Colors.transparent,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Text(
-                  name,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: isSelected ? Colors.white : Colors.blue,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
-          )
-        ],
       ),
     );
   }

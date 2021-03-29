@@ -3,11 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fluid_bottom_nav_bar/fluid_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:lifestyle/BirthdayReminder/new_entry_birthday.dart';
 import 'package:lifestyle/login/Login.dart';
 import 'package:lifestyle/main.dart';
 import 'package:lifestyle/mainHome.dart';
 import 'package:lifestyle/settings.dart';
 import 'package:lifestyle/userAccount.dart';
+
+import '../reminders.dart';
 
 class birthdayHome extends StatefulWidget {
   @override
@@ -46,49 +49,36 @@ class _birthdayHomeState extends State<birthdayHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => reminders(),
+                ),
+              );
+            },),
         title: Padding(
           padding: const EdgeInsets.all(5.0),
-          child: Text("Shopping"),
+          child: Text("Birthday Reminder"),
         ),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            new UserAccountsDrawerHeader(
-              accountName: new Text(name),
-              accountEmail: new Text(FirebaseAuth.instance.currentUser.email),
-              currentAccountPicture: new CircleAvatar(
-                backgroundImage:
-                    new NetworkImage('https://i.pinimg.com/originals/51/f6/fb/51f6fb256629fc755b8870c801092942.png'),
+
+        actions: <Widget>[
+            IconButton(
+              icon: const Icon(
+                Icons.add,
+                size: 35.0,
               ),
-            ),
-            ListTile(
-              title: Text('About Page'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Terms & Conditions'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Log Out'),
-              onTap: () {
-                Navigator.pop(context);
-                FirebaseAuth.instance.signOut();
+              tooltip: 'Add Reminder',
+              onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => loginClass()),
+                  MaterialPageRoute(
+                    builder: (context) => NewEntryBirthday(),
+                  ),
                 );
               },
             ),
-          ],
-        ),
+          ]
       ),
       body: Container(),
       bottomNavigationBar: FluidNavBar(

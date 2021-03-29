@@ -7,6 +7,7 @@ import 'package:lifestyle/settings.dart';
 import 'package:lifestyle/mainHome.dart';
 import 'package:lifestyle/userAccount.dart';
 import 'package:lifestyle/BirthdayReminder/birthdayHome.dart';
+import 'BirthdayReminder/BirthdayMain.dart';
 import 'WaterReminder/screens/data_entry_screen.dart';
 
 class reminders extends StatefulWidget {
@@ -113,7 +114,7 @@ class remindersState extends State<reminders> {
               margin: EdgeInsets.all(15.0),
               child: InkWell(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => birthdayHome()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => BirthdayMain()));
                 },
                 splashColor: Colors.white,
                 child: Center(
