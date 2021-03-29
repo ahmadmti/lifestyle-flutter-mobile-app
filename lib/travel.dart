@@ -24,10 +24,7 @@ class travelState extends State<travel> {
     return Center(
       child: Scaffold(
           appBar: AppBar(
-            title: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text("Travel"),
-            ),
+            title: Text("Travel"),
           ),
           body: SingleChildScrollView(
             child: Container(
@@ -112,47 +109,48 @@ class travelState extends State<travel> {
               ),
             ),
           ),
-          bottomNavigationBar: BottomAppBar(
-              shape: CircularNotchedRectangle(),
-              child: Container(
-                height: 75,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    IconButton(
-                      iconSize: 50.0,
-                      icon: Icon(Icons.settings),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => settings()));
-                      },
-                    ),
-                    IconButton(
-                      iconSize: 50.0,
-                      icon: Icon(Icons.home),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => mainHome()));
-                      },
-                    ),
-                    IconButton(
-                      iconSize: 50.0,
-                      icon: Icon(Icons.supervised_user_circle_outlined),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => userAccount()));
-                      },
-                    )
-                  ],
-                ),
-              ))),
+          // bottomNavigationBar: BottomAppBar(
+          //     shape: CircularNotchedRectangle(),
+          //     child: Container(
+          //       height: 75,
+          //       child: Row(
+          //         mainAxisSize: MainAxisSize.max,
+          //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //         children: <Widget>[
+          //           IconButton(
+          //             iconSize: 50.0,
+          //             icon: Icon(Icons.settings),
+          //             onPressed: () {
+          //               Navigator.push(
+          //                   context,
+          //                   MaterialPageRoute(
+          //                       builder: (context) => settings()));
+          //             },
+          //           ),
+          //           IconButton(
+          //             iconSize: 50.0,
+          //             icon: Icon(Icons.home),
+          //             onPressed: () {
+          //               Navigator.push(
+          //                   context,
+          //                   MaterialPageRoute(
+          //                       builder: (context) => mainHome()));
+          //             },
+          //           ),
+          //           IconButton(
+          //             iconSize: 50.0,
+          //             icon: Icon(Icons.supervised_user_circle_outlined),
+          //             onPressed: () {
+          //               Navigator.push(
+          //                   context,
+          //                   MaterialPageRoute(
+          //                       builder: (context) => userAccount()));
+          //             },
+          //           )
+          //         ],
+          //       ),
+          //     )),
+              ),
     );
   }
 }

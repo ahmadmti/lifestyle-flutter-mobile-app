@@ -55,7 +55,7 @@ class _birthdayHomeState extends State<birthdayHome> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: () {
+        leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(

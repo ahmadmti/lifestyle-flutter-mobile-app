@@ -33,12 +33,7 @@ class userAccountState extends State<userAccount> {
   Widget build(BuildContext context) {
     return Center(
         child: Scaffold(
-      appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Text("User Account"),
-        ),
-      ),
+      
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

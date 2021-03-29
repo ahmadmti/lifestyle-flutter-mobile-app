@@ -66,10 +66,7 @@ class shoppingState extends State<shopping> {
     return Center(
       child: Scaffold(
           appBar: AppBar(
-            title: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Text("Shopping"),
-            ),
+            title: Text("Shopping"),
           ),
           body: CustomTab(
             3,

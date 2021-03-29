@@ -7,6 +7,7 @@ import 'package:lifestyle/Motivation/MainPage.dart';
 import 'package:lifestyle/Shoping/Home.dart';
 import 'package:lifestyle/Travel/widget/home_screen.dart';
 import 'package:lifestyle/financeHome.dart';
+import 'package:lifestyle/home.dart';
 import 'package:lifestyle/login/Login.dart';
 import 'package:lifestyle/main.dart';
 import 'package:lifestyle/medicalHome.dart';
@@ -48,7 +49,7 @@ class mainHomeState extends State<mainHome> {
   Stream slides;
   @override
   void initState() {
-    _child = mainHome();
+    _child = Home();
     super.initState();
     getData();
     _queryDb();
@@ -94,8 +95,8 @@ class mainHomeState extends State<mainHome> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               new UserAccountsDrawerHeader(
-                accountName: new Text(name??''), 
-                accountEmail: new Text(FirebaseAuth.instance.currentUser.email?? ''),
+                accountName: new Text(name ?? ''),
+                accountEmail: new Text(FirebaseAuth.instance.currentUser.email ?? ''),
                 currentAccountPicture: new CircleAvatar(
                   backgroundImage:
                       new NetworkImage('https://i.pinimg.com/originals/51/f6/fb/51f6fb256629fc755b8870c801092942.png'),
@@ -152,179 +153,13 @@ class mainHomeState extends State<mainHome> {
         //       );
         //     }
         // ),
-        body: Container(
-          padding: EdgeInsets.all(20.0),
-          child: GridView.count(crossAxisCount: 2, children: <Widget>[
-            Card(
-              margin: EdgeInsets.all(20.0),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => financeHome()));
-                },
-                splashColor: Colors.blue,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(Icons.attach_money_rounded, size: 50.0, color: Colors.blue),
-                      Text("Finance", style: new TextStyle(fontSize: 18.0, color: Colors.blue))
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Card(
-              margin: EdgeInsets.all(20.0),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => medicalHome()));
-                },
-                splashColor: Colors.green,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(Icons.medical_services_outlined, size: 50.0, color: Colors.green),
-                      Text("Health", style: new TextStyle(fontSize: 18.0, color: Colors.green))
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Card(
-              margin: EdgeInsets.all(20.0),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => reminders()));
-                },
-                splashColor: Colors.red,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(Icons.alarm_add_outlined, size: 50.0, color: Colors.red),
-                      Text("Reminder", style: new TextStyle(fontSize: 18.0, color: Colors.red))
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Card(
-              margin: EdgeInsets.all(20.0),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => todoList()));
-                },
-                splashColor: Colors.orange,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(Icons.today_outlined, size: 50.0, color: Colors.orange),
-                      Text("To-Do List", style: new TextStyle(fontSize: 18.0, color: Colors.orange))
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Card(
-              margin: EdgeInsets.all(20.0),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => travel()));
-                },
-                splashColor: Colors.black,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(Icons.airplanemode_on_outlined, size: 50.0, color: Colors.black),
-                      Text("Travel", style: new TextStyle(fontSize: 18.0, color: Colors.black))
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Card(
-              margin: EdgeInsets.all(20.0),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => shopping()));
-                },
-                splashColor: Colors.blueGrey,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(Icons.shopping_bag_outlined, size: 50.0, color: Colors.blueGrey),
-                      Text("shopping", style: new TextStyle(fontSize: 18.0, color: Colors.blueGrey))
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Card(
-              margin: EdgeInsets.all(20.0),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => emergency()));
-                },
-                splashColor: Colors.redAccent,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(
-                        Icons.local_police_outlined,
-                        size: 50.0,
-                        color: Colors.redAccent,
-                      ),
-                      Text("Emergency",
-                          style: new TextStyle(
-                            fontSize: 18.0,
-                            color: Colors.redAccent,
-                          ))
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Card(
-              margin: EdgeInsets.all(20.0),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => motivation()));
-                },
-                splashColor: Colors.tealAccent[700],
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(
-                        Icons.format_quote_outlined,
-                        size: 50.0,
-                        color: Colors.tealAccent[700],
-                      ),
-                      Text("Motivational",
-                          style: new TextStyle(
-                            fontSize: 18.0,
-                            color: Colors.tealAccent[700],
-                          ))
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ]),
-        ),
+        body: _child,
         bottomNavigationBar: FluidNavBar(
           icons: [
             FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
             FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
             FluidNavBarIcon(
-                icon: Icons.supervised_user_circle_outlined,
-                backgroundColor: Colors.blue,
-                extras: {"label": "account"}),
+                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
           ],
           onChange: _handleNavigationChange,
           style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
@@ -474,15 +309,15 @@ class mainHomeState extends State<mainHome> {
       switch (index) {
         case 0:
           _child = settings();
-          Navigator.push(context, MaterialPageRoute(builder: (context) => settings()));
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => settings()));
           break;
         case 1:
-          _child = mainHome();
-          Navigator.push(context, MaterialPageRoute(builder: (context) => mainHome()));
+          _child = Home();
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => mainHome()));
           break;
         case 2:
           _child = userAccount();
-          Navigator.push(context, MaterialPageRoute(builder: (context) => userAccount()));
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => userAccount()));
           break;
       }
       _child = AnimatedSwitcher(

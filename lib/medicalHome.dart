@@ -50,50 +50,9 @@ class medicalHomeState extends State<medicalHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Text("Health"),
-        ),
+        title: Text("Health"),
       ),
-      drawer: Drawer(
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            new UserAccountsDrawerHeader(
-              accountName: new Text(name),
-              accountEmail: new Text(FirebaseAuth.instance.currentUser.email),
-              currentAccountPicture: new CircleAvatar(
-                backgroundImage:
-                    new NetworkImage('https://i.pinimg.com/originals/51/f6/fb/51f6fb256629fc755b8870c801092942.png'),
-              ),
-            ),
-            ListTile(
-              title: Text('About Page'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Terms & Conditions'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Log Out'),
-              onTap: () {
-                Navigator.pop(context);
-                FirebaseAuth.instance.signOut();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => loginClass()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      
       body: AnimatedContainer(
         duration: Duration(milliseconds: 500),
         curve: Curves.easeOutQuint,
@@ -106,11 +65,13 @@ class medicalHomeState extends State<medicalHome> {
             ),
             boxShadow: [BoxShadow(color: Colors.black87, blurRadius: blur, offset: Offset(offset, offset))]),
         child: Container(
+          margin: EdgeInsets.only(top: 10),
             padding: EdgeInsets.all(30.0),
             child: Center(
               child: GridView.count(crossAxisCount: 2, children: <Widget>[
                 Card(
-                  margin: EdgeInsets.all(20.0),
+                  elevation: 5,
+                  margin: EdgeInsets.all(10.0),
                   child: InkWell(
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => dietPlan()));
@@ -118,17 +79,19 @@ class medicalHomeState extends State<medicalHome> {
                     splashColor: Colors.white,
                     child: Center(
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
+                        // mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Icon(Icons.fastfood_outlined, size: 50.0, color: Colors.green),
-                          Text("Diet Plans", style: new TextStyle(fontSize: 18.0, color: Colors.green))
+                          Icon(Icons.fastfood_outlined, size: 60.0, color: Colors.green),
+                          Text("Diet Plans", style: new TextStyle(fontSize: 14.0, color: Colors.green))
                         ],
                       ),
                     ),
                   ),
                 ),
                 Card(
-                  margin: EdgeInsets.all(20.0),
+                    elevation: 5,
+                  margin: EdgeInsets.all(10.0),
                   child: InkWell(
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => Tabs()));
@@ -136,10 +99,11 @@ class medicalHomeState extends State<medicalHome> {
                     splashColor: Colors.white,
                     child: Center(
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
+                        // mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Icon(Icons.fitness_center, size: 50.0, color: Colors.blue),
-                          Text("Fitness Plans", style: new TextStyle(fontSize: 18.0, color: Colors.blue))
+                          Icon(Icons.fitness_center, size: 60.0, color: Colors.blue),
+                          Text("Fitness Plans", style: new TextStyle(fontSize: 14.0, color: Colors.blue))
                         ],
                       ),
                     ),
@@ -148,22 +112,22 @@ class medicalHomeState extends State<medicalHome> {
               ]),
             )),
       ),
-      bottomNavigationBar: FluidNavBar(
-        icons: [
-          FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
-          FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
-          FluidNavBarIcon(
-              icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"}),
-        ],
-        onChange: _handleNavigationChange,
-        style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
-        scaleFactor: 1.5,
-        defaultIndex: 1,
-        itemBuilder: (icon, item) => Semantics(
-          label: icon.extras["label"],
-          child: item,
-        ),
-      ),
+      // bottomNavigationBar: FluidNavBar(
+      //   icons: [
+      //     FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+      //     FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+      //     FluidNavBarIcon(
+      //         icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"}),
+      //   ],
+      //   onChange: _handleNavigationChange,
+      //   style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+      //   scaleFactor: 1.5,
+      //   defaultIndex: 1,
+      //   itemBuilder: (icon, item) => Semantics(
+      //     label: icon.extras["label"],
+      //     child: item,
+      //   ),
+      // ),
     );
   }
 

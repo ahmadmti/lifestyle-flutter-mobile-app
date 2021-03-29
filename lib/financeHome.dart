@@ -74,19 +74,16 @@ class financeHomePage extends State<financeHome> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
                   child: Container(
-                    color: Colors.blue[300],
+                    color: Colors.blue,
                     height: 300,
                     child: AppBar(
-                      backgroundColor: Colors.blue[300],
+                      backgroundColor: Colors.blue,
                       title: Text(
                         'Finance',
                       ),
-                      leading: IconButton(
-                        icon: Icon(
-                          Platform.isIOS ? Icons.arrow_back_ios_rounded : Icons.arrow_back_rounded,
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                      ),
+                     
+                       
+                      
                     ),
                   ),
                 ),

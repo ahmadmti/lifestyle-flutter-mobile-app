@@ -11,7 +11,7 @@ class todoList extends StatefulWidget {
 }
 
 class todoListState extends State<todoList> {
-  List todos =[];
+  List<String> todos =[];
   var input ;
 
   @override
@@ -25,43 +25,40 @@ class todoListState extends State<todoList> {
     return Center(
         child: Scaffold(
             appBar: AppBar(
-              title: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Text("To-Do List"),
-              ),
+              title: Text("To-Do List"),
             ),
-            drawer: Drawer(
-              child: ListView(
-                // Important: Remove any padding from the ListView.
-                padding: EdgeInsets.zero,
-                children: <Widget>[
-                  new UserAccountsDrawerHeader(
-                    accountName: new Text('Murtaza'),
-                    accountEmail: new Text('murtaza.sharbat786@gmail.com'),
-                    currentAccountPicture: new CircleAvatar(
-                      backgroundImage: new NetworkImage('url'),
-                    ),
-                  ),
-                  ListTile(
-                    title: Text('About Page'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    title: Text('User Settings'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
-            ),
+            // drawer: Drawer(
+            //   child: ListView(
+            //     // Important: Remove any padding from the ListView.
+            //     padding: EdgeInsets.zero,
+            //     children: <Widget>[
+            //       new UserAccountsDrawerHeader(
+            //         accountName: new Text('Murtaza'),
+            //         accountEmail: new Text('murtaza.sharbat786@gmail.com'),
+            //         currentAccountPicture: new CircleAvatar(
+            //           backgroundImage: new NetworkImage('url'),
+            //         ),
+            //       ),
+            //       ListTile(
+            //         title: Text('About Page'),
+            //         onTap: () {
+            //           Navigator.pop(context);
+            //         },
+            //       ),
+            //       ListTile(
+            //         title: Text('User Settings'),
+            //         onTap: () {
+            //           Navigator.pop(context);
+            //         },
+            //       ),
+            //     ],
+            //   ),
+            // ),
             body: ListView.builder(
               itemCount: todos.length,
               itemBuilder: (BuildContext context, int index) {
                 return Dismissible(
-                    key: todos[index],
+                    key: Key(todos[index]),
                     child: Card(
                       elevation: 4,
                       margin: EdgeInsets.all(8),
@@ -83,46 +80,47 @@ class todoListState extends State<todoList> {
                     ));
               },
             ),
-            bottomNavigationBar: BottomAppBar(
-                shape: CircularNotchedRectangle(),
-                child: Container(
-                  height: 75,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      IconButton(
-                        iconSize: 50.0,
-                        icon: Icon(Icons.settings),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => settings()));
-                        },
-                      ),
-                      IconButton(
-                        iconSize: 50.0,
-                        icon: Icon(Icons.home),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => mainHome()));
-                        },
-                      ),
-                      IconButton(
-                        iconSize: 50.0,
-                        icon: Icon(Icons.supervised_user_circle_outlined),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => userAccount()));
-                        },
-                      )
-                    ],
-                  ),
-                ))));
+            // bottomNavigationBar: BottomAppBar(
+            //     shape: CircularNotchedRectangle(),
+            //     child: Container(
+            //       height: 75,
+            //       child: Row(
+            //         mainAxisSize: MainAxisSize.max,
+            //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //         children: <Widget>[
+            //           IconButton(
+            //             iconSize: 50.0,
+            //             icon: Icon(Icons.settings),
+            //             onPressed: () {
+            //               Navigator.push(
+            //                   context,
+            //                   MaterialPageRoute(
+            //                       builder: (context) => settings()));
+            //             },
+            //           ),
+            //           IconButton(
+            //             iconSize: 50.0,
+            //             icon: Icon(Icons.home),
+            //             onPressed: () {
+            //               Navigator.push(
+            //                   context,
+            //                   MaterialPageRoute(
+            //                       builder: (context) => mainHome()));
+            //             },
+            //           ),
+            //           IconButton(
+            //             iconSize: 50.0,
+            //             icon: Icon(Icons.supervised_user_circle_outlined),
+            //             onPressed: () {
+            //               Navigator.push(
+            //                   context,
+            //                   MaterialPageRoute(
+            //                       builder: (context) => userAccount()));
+            //             },
+            //           )
+            //         ],
+            //       ),
+            //     )),
+                ));
   }
 }

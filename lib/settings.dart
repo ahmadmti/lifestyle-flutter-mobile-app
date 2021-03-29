@@ -30,12 +30,7 @@ class settingsState extends State<settings> {
   Widget build(BuildContext context) {
     return Center(
         child: Scaffold(
-      appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Text("Settings"),
-        ),
-      ),
+     
       body: ListView(
         children: [
           SizedBox(

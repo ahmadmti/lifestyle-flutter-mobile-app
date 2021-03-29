@@ -982,93 +982,95 @@ class _dietPlanState extends State<dietPlan> {
     return new Scaffold(
 //      key: _scaffoldKey,
         key: _scaffoldKey,
-        drawer: SafeArea(
-          child: Theme(
-              data: Theme.of(context).copyWith(
-                canvasColor: Colors.transparent,
-              ),
-              child: Drawer(
-                child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topRight:
-                                Radius.circular(DimensionUtils.margin_xxlarge),
-                            bottomRight:
-                                Radius.circular(DimensionUtils.margin_xxlarge)),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 0.3,
-                            spreadRadius: 0.0,
-                          ),
-                        ]),
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      children: <Widget>[
-                        DrawerHeader(
-                          margin: EdgeInsets.only(bottom: 0.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[],
-                          ),
-                        ),
-                      ],
-                    )),
-              )),
-        ),
+        // drawer: SafeArea(
+        //   child: Theme(
+        //       data: Theme.of(context).copyWith(
+        //         canvasColor: Colors.transparent,
+        //       ),
+        //       child: Drawer(
+        //         child: Container(
+        //             decoration: BoxDecoration(
+        //                 borderRadius: BorderRadius.only(
+        //                     topRight:
+        //                         Radius.circular(DimensionUtils.margin_xxlarge),
+        //                     bottomRight:
+        //                         Radius.circular(DimensionUtils.margin_xxlarge)),
+        //                 color: Colors.white,
+        //                 boxShadow: [
+        //                   BoxShadow(
+        //                     blurRadius: 0.3,
+        //                     spreadRadius: 0.0,
+        //                   ),
+        //                 ]),
+        //             child: ListView(
+        //               padding: EdgeInsets.zero,
+        //               children: <Widget>[
+        //                 DrawerHeader(
+        //                   margin: EdgeInsets.only(bottom: 0.0),
+        //                   child: Row(
+        //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //                     children: <Widget>[],
+        //                   ),
+        //                 ),
+        //               ],
+        //             )),
+        //       ),
+        //       ),
+        // ),
         appBar: new AppBar(
           backgroundColor: Colors.blue,
           title: new Text(strTitle),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => medicalHome()));
-            },
-          ),
+          // leading: IconButton(
+          //   icon: Icon(Icons.arrow_back),
+          //   onPressed: () {
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (context) => medicalHome()));
+          //   },
+          // ),
         ),
         body: Container(
           child: SingleChildScrollView(
             child: _widgetOptions.elementAt(_selectedIndex),
           ),
         ),
-        bottomNavigationBar: BottomAppBar(
-            shape: CircularNotchedRectangle(),
-            child: Container(
-              height: 75,
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  IconButton(
-                    iconSize: 50.0,
-                    icon: Icon(Icons.settings),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => settings()));
-                    },
-                  ),
-                  IconButton(
-                    iconSize: 50.0,
-                    icon: Icon(Icons.home),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => mainHome()));
-                    },
-                  ),
-                  IconButton(
-                    iconSize: 50.0,
-                    icon: Icon(Icons.supervised_user_circle_outlined),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => userAccount()));
-                    },
-                  )
-                ],
-              ),
-            )));
+        // bottomNavigationBar: BottomAppBar(
+        //     shape: CircularNotchedRectangle(),
+        //     child: Container(
+        //       height: 75,
+        //       child: Row(
+        //         mainAxisSize: MainAxisSize.max,
+        //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //         children: <Widget>[
+        //           IconButton(
+        //             iconSize: 50.0,
+        //             icon: Icon(Icons.settings),
+        //             onPressed: () {
+        //               Navigator.push(context,
+        //                   MaterialPageRoute(builder: (context) => settings()));
+        //             },
+        //           ),
+        //           IconButton(
+        //             iconSize: 50.0,
+        //             icon: Icon(Icons.home),
+        //             onPressed: () {
+        //               Navigator.push(context,
+        //                   MaterialPageRoute(builder: (context) => mainHome()));
+        //             },
+        //           ),
+        //           IconButton(
+        //             iconSize: 50.0,
+        //             icon: Icon(Icons.supervised_user_circle_outlined),
+        //             onPressed: () {
+        //               Navigator.push(
+        //                   context,
+        //                   MaterialPageRoute(
+        //                       builder: (context) => userAccount()));
+        //             },
+        //           )
+        //         ],
+        //       ),
+        //     )),
+            );
   }
 }
 

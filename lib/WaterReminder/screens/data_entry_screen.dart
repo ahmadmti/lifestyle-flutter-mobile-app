@@ -28,11 +28,14 @@ class DataEntryScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  InkWell(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Icon(Icons.arrow_back_ios))
+                  Container(
+                    margin: EdgeInsets.only(top: 10),
+                    child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Icon(Icons.arrow_back)),
+                  )
                 ],
               ),
               SizedBox(
