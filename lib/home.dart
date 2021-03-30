@@ -5,6 +5,8 @@ import 'package:lifestyle/shopping.dart';
 import 'package:lifestyle/todoList.dart';
 import 'package:lifestyle/travel.dart';
 
+import 'Travel/widget/flights_screen.dart';
+import 'Travel/widget/home_screen.dart';
 import 'emergency/emergency.dart';
 import 'financeHome.dart';
 import 'medicalHome.dart';
@@ -97,7 +99,7 @@ class _HomeState extends State<Home> {
           margin: EdgeInsets.all(20.0),
           child: InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => travel()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => FligthScreen()));
             },
             splashColor: Colors.black,
             child: Center(

@@ -9,6 +9,7 @@ import 'package:lifestyle/userAccount.dart';
 import 'package:lifestyle/BirthdayReminder/birthdayHome.dart';
 import 'BirthdayReminder/BirthdayMain.dart';
 import 'WaterReminder/screens/data_entry_screen.dart';
+import 'bad_habit_home.dart';
 
 class reminders extends StatefulWidget {
   @override
@@ -122,6 +123,25 @@ class remindersState extends State<reminders> {
                       children: <Widget>[
                         Icon(Icons.alarm_add_outlined, size: 50.0, color: Colors.white),
                         Text("Birth-Day", style: new TextStyle(fontSize: 18.0, color: Colors.white))
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Card(
+                color: Colors.tealAccent[700],
+                margin: EdgeInsets.all(15.0),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => BadHabitHome()));
+                  },
+                  splashColor: Colors.white,
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(Icons.water_damage, size: 50.0, color: Colors.white),
+                        Text("Bad Habits", style: new TextStyle(fontSize: 18.0, color: Colors.white))
                       ],
                     ),
                   ),

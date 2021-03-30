@@ -3,8 +3,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lifestyle/FitnessPlan/calculator/utils/extractedWidgets.dart';
 import 'package:lifestyle/FitnessPlan/calculator/utils/textStyles.dart';
 import 'package:lifestyle/FitnessPlan/calculator/utils/dynamaicTheme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ResultPage extends StatelessWidget {
+class ResultPage extends StatefulWidget {
   ResultPage({
     @required this.totalCalories,
     @required this.carbs,
@@ -20,6 +21,19 @@ class ResultPage extends StatelessWidget {
   final double fats;
   final double bmi;
   final double tdee;
+
+  @override
+  _ResultPageState createState() => _ResultPageState();
+}
+
+class _ResultPageState extends State<ResultPage> {
+  @override
+  void initState() {
+    super.initState();
+    SharedPreferences.getInstance().then((value) {
+      value.setDouble("BMI", double.parse(widget.bmi.toStringAsFixed(1)));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +56,7 @@ class ResultPage extends StatelessWidget {
                       tag: "appBarTitle",
                       child: Text(
                         "Results",
-                        style: isThemeDark(context)
-                            ? TitleTextStyles.dark
-                            : TitleTextStyles.light,
+                        style: isThemeDark(context) ? TitleTextStyles.dark : TitleTextStyles.light,
                       ),
                     ),
                   ],
@@ -66,12 +78,12 @@ class ResultPage extends StatelessWidget {
                           children: <Widget>[
                             ResultContainer(
                               title: "Total Calories",
-                              value: "${totalCalories.toStringAsFixed(0)}",
+                              value: "${widget.totalCalories.toStringAsFixed(0)}",
                               units: " kcals",
                             ),
                             ResultContainer(
                               title: "Carbs",
-                              value: "${carbs.toStringAsFixed(0)}",
+                              value: "${widget.carbs.toStringAsFixed(0)}",
                               units: " g",
                             ),
                             Row(
@@ -79,7 +91,7 @@ class ResultPage extends StatelessWidget {
                                 Expanded(
                                   child: ResultContainer(
                                     title: "Protein",
-                                    value: "${protein.toStringAsFixed(0)}",
+                                    value: "${widget.protein.toStringAsFixed(0)}",
                                     units: " g",
                                   ),
                                 ),
@@ -87,7 +99,7 @@ class ResultPage extends StatelessWidget {
                                 Expanded(
                                   child: ResultContainer(
                                     title: "Fats",
-                                    value: "${fats.toStringAsFixed(0)}",
+                                    value: "${widget.fats.toStringAsFixed(0)}",
                                     units: " g",
                                   ),
                                 ),
@@ -108,7 +120,7 @@ class ResultPage extends StatelessWidget {
                             Expanded(
                               child: ResultContainer(
                                 title: "BMI",
-                                value: "${bmi.toStringAsFixed(1)}",
+                                value: "${widget.bmi.toStringAsFixed(1)}",
                                 units: "",
                               ),
                             ),
@@ -116,7 +128,7 @@ class ResultPage extends StatelessWidget {
                             Expanded(
                               child: ResultContainer(
                                 title: "TDEE",
-                                value: "${tdee.toStringAsFixed(0)}",
+                                value: "${widget.tdee.toStringAsFixed(0)}",
                                 units: " Kcals",
                               ),
                             ),

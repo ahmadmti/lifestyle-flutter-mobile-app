@@ -17,19 +17,19 @@ class Programs extends StatelessWidget {
       image: 'assets/images/image001.jpg',
       title: 'Easy Start',
       time: '8 min',
-      difficult: 'Low',
+      difficult: 'Beginner',
     ),
     Exercise(
       image: 'assets/images/image002.jpg',
       title: 'Medium Start',
       time: '16 min',
-      difficult: 'Medium',
+      difficult: 'Intermediate',
     ),
     Exercise(
       image: 'assets/images/image003.jpg',
       title: 'Pro Start',
       time: '25 min',
-      difficult: 'High',
+      difficult: 'Expert ',
     )
   ];
 
@@ -76,8 +76,8 @@ class Programs extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Header(
-                  'Fitness',
-                  rightSide: UserPhoto(),
+                  'Exercises',
+                  // rightSide: UserPhoto(),
                 ),
                 MainCardPrograms(), // MainCard
                 Section(

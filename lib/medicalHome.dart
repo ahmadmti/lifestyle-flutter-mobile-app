@@ -7,7 +7,9 @@ import 'package:lifestyle/userAccount.dart';
 import 'package:lifestyle/mainHome.dart';
 import 'package:lifestyle/settings.dart';
 import 'package:lifestyle/Health/DietPlan/dietPlan.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'FitnessPlan/calculator/screens/homePage.dart';
 import 'login/Login.dart';
 import 'main.dart';
 
@@ -25,10 +27,17 @@ class medicalHomeState extends State<medicalHome> {
   final double top = 100;
   String name = '';
   String n = '';
+  double bmi = 0.0;
   @override
   void initState() {
     super.initState();
     getData();
+
+    SharedPreferences.getInstance().then((value) {
+      setState(() {
+        bmi = value.getDouble("BMI") ?? 0.0;
+      });
+    });
   }
 
   Future<String> getData() async {
@@ -48,111 +57,357 @@ class medicalHomeState extends State<medicalHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Health"),
-      ),
-      
-      body: AnimatedContainer(
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeOutQuint,
-        margin: EdgeInsets.only(top: 50, bottom: 50, right: 30, left: 10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: NetworkImage('https://i.stack.imgur.com/JHYTI.jpg'),
-            ),
-            boxShadow: [BoxShadow(color: Colors.black87, blurRadius: blur, offset: Offset(offset, offset))]),
-        child: Container(
-          margin: EdgeInsets.only(top: 10),
-            padding: EdgeInsets.all(30.0),
-            child: Center(
-              child: GridView.count(crossAxisCount: 2, children: <Widget>[
-                Card(
-                  elevation: 5,
-                  margin: EdgeInsets.all(10.0),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => dietPlan()));
-                    },
-                    splashColor: Colors.white,
-                    child: Center(
-                      child: Column(
-                        // mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Icon(Icons.fastfood_outlined, size: 60.0, color: Colors.green),
-                          Text("Diet Plans", style: new TextStyle(fontSize: 14.0, color: Colors.green))
-                        ],
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Column(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: Container(
+                    color: Colors.greenAccent[400],
+                    height: 300,
+                    child: AppBar(
+                      backgroundColor: Colors.greenAccent[400],
+                      title: Text(
+                        'Health',
                       ),
                     ),
                   ),
                 ),
-                Card(
-                    elevation: 5,
-                  margin: EdgeInsets.all(10.0),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Tabs()));
-                    },
-                    splashColor: Colors.white,
-                    child: Center(
-                      child: Column(
-                        // mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Icon(Icons.fitness_center, size: 60.0, color: Colors.blue),
-                          Text("Fitness Plans", style: new TextStyle(fontSize: 14.0, color: Colors.blue))
-                        ],
-                      ),
+                Expanded(
+                    child: Scaffold(
+                  body: Container(
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * .15),
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          height: 50,
+                          child: Card(
+                            color: Colors.greenAccent[400],
+                            margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            child: InkWell(
+                              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage())),
+                              splashColor: Colors.white,
+                              child: Center(
+                                child: Text("Calculate BMI",
+                                    style: new TextStyle(
+                                      fontSize: 20.0,
+                                      color: Colors.black,
+                                    )),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 120,
+                                child: Card(
+                                  margin: EdgeInsets.fromLTRB(40, 0, 20, 0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => dietPlan()));
+                                    },
+                                    splashColor: Colors.white,
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Icon(Icons.fastfood_outlined, size: 50.0, color: Colors.green),
+                                            Text("Diet Plans",
+                                                style: new TextStyle(fontSize: 16.0, color: Colors.green))
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 120,
+                                child: Card(
+                                  margin: EdgeInsets.fromLTRB(20, 0, 40, 0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => Tabs()));
+                                    },
+                                    splashColor: Colors.white,
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Icon(Icons.fitness_center, size: 50.0, color: Colors.blue),
+                                            Text("Fitness Plan",
+                                                style: new TextStyle(fontSize: 16.0, color: Colors.blue))
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        //   children: [
+                        //     Expanded(
+                        //       child: Container(
+                        //         height: 120,
+                        //         child: Card(
+                        //           margin: EdgeInsets.fromLTRB(120, 0, 120, 0),
+                        //           child: InkWell(
+                        //             onTap: () {},
+                        //             splashColor: Colors.white,
+                        //             child: Center(
+                        //               child: Padding(
+                        //                 padding: const EdgeInsets.all(8.0),
+                        //                 child: Column(
+                        //                   mainAxisSize: MainAxisSize.min,
+                        //                   children: <Widget>[
+                        //                     Icon(Icons.fitness_center, size: 50.0, color: Colors.orange),
+                        //                     Text("Exercises",
+                        //                         style: new TextStyle(fontSize: 18.0, color: Colors.orange))
+                        //                   ],
+                        //                 ),
+                        //               ),
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // )
+                      ],
                     ),
                   ),
-                )
-              ]),
-            )),
+                ))
+              ],
+            ),
+            Positioned(
+                right: 0,
+                left: 0,
+                top: MediaQuery.of(context).size.height * .16,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text("Your BMI Index",
+                        style: new TextStyle(
+                          fontSize: 12.0,
+                        )),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text("$bmi",
+                        style: new TextStyle(
+                          fontSize: 34.0,
+                          color: Colors.white,
+                        )),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                        (bmi > 0 && bmi < 18.5)
+                            ? "You are underweight"
+                            : (bmi >= 18.5 && bmi < 25)
+                                ? "You are healthy!"
+                                : (bmi >= 25 && bmi <= 30)
+                                    ? "You are overweight"
+                                    : (bmi > 30)
+                                        ? "You are obese"
+                                        : "",
+                        style: new TextStyle(
+                          fontSize: 28.0,
+                          color: Colors.white,
+                        )),
+                  ],
+                )),
+            Positioned(
+                right: 0,
+                left: 0,
+                top: MediaQuery.of(context).size.height * .35,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 70,
+                            child: Card(
+                              margin: EdgeInsets.fromLTRB(40, 20, 10, 0),
+                              elevation: 6,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              ),
+                              child: InkWell(
+                                onTap: null,
+                                splashColor: Colors.white,
+                                child: Stack(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text("Underweight",
+                                            style: new TextStyle(
+                                              fontSize: 8.0,
+                                            )),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Text("<18.5",
+                                          style: new TextStyle(
+                                            fontSize: 16.0,
+                                            color: Colors.yellow[800],
+                                          )),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 70,
+                            child: Card(
+                              elevation: 6,
+                              margin: EdgeInsets.fromLTRB(10, 20, 40, 0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              ),
+                              child: InkWell(
+                                onTap: null,
+                                splashColor: Colors.white,
+                                child: Stack(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text("Normal",
+                                            style: new TextStyle(
+                                              fontSize: 8.0,
+                                            )),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Text("18.5 - 25",
+                                          style: new TextStyle(
+                                            fontSize: 16.0,
+                                            color: Colors.green,
+                                          )),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 70,
+                            child: Card(
+                              margin: EdgeInsets.fromLTRB(40, 20, 10, 0),
+                              elevation: 6,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              ),
+                              child: InkWell(
+                                onTap: null,
+                                splashColor: Colors.white,
+                                child: Stack(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text("Overweight",
+                                            style: new TextStyle(
+                                              fontSize: 8.0,
+                                            )),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Text("25 - 30",
+                                          style: new TextStyle(
+                                            fontSize: 16.0,
+                                            color: Colors.red,
+                                          )),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 70,
+                            child: Card(
+                              elevation: 6,
+                              margin: EdgeInsets.fromLTRB(10, 20, 40, 0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              ),
+                              child: InkWell(
+                                onTap: null,
+                                splashColor: Colors.white,
+                                child: Stack(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text("Obese",
+                                            style: new TextStyle(
+                                              fontSize: 8.0,
+                                            )),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Text("> 30",
+                                          style: new TextStyle(
+                                            fontSize: 16.0,
+                                            color: Colors.red[900],
+                                          )),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
+          ],
+        ),
       ),
-      // bottomNavigationBar: FluidNavBar(
-      //   icons: [
-      //     FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
-      //     FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
-      //     FluidNavBarIcon(
-      //         icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"}),
-      //   ],
-      //   onChange: _handleNavigationChange,
-      //   style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
-      //   scaleFactor: 1.5,
-      //   defaultIndex: 1,
-      //   itemBuilder: (icon, item) => Semantics(
-      //     label: icon.extras["label"],
-      //     child: item,
-      //   ),
-      // ),
     );
-  }
-
-  void _handleNavigationChange(int index) {
-    setState(() {
-      switch (index) {
-        case 0:
-          _child = settings();
-          Navigator.push(context, MaterialPageRoute(builder: (context) => settings()));
-          break;
-        case 1:
-          _child = mainHome();
-          Navigator.push(context, MaterialPageRoute(builder: (context) => mainHome()));
-          break;
-        case 2:
-          _child = userAccount();
-          Navigator.push(context, MaterialPageRoute(builder: (context) => userAccount()));
-          break;
-      }
-      _child = AnimatedSwitcher(
-        switchInCurve: Curves.easeOut,
-        switchOutCurve: Curves.easeIn,
-        duration: Duration(milliseconds: 500),
-        child: _child,
-      );
-    });
   }
 }

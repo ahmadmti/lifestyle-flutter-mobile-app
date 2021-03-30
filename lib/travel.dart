@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lifestyle/userAccount.dart';
-import 'package:lifestyle/mainHome.dart';
-import 'package:lifestyle/settings.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'main.dart';
 
