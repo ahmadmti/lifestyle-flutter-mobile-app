@@ -7,6 +7,7 @@ class CalendarViewModel with ChangeNotifier {
   DateTime selectedReturnDate;
   Widget buildDepartureCalendar(CalendarController calendarController) {
     return TableCalendar(
+      startDay: DateTime.now(),
       calendarController: calendarController,
       startingDayOfWeek: StartingDayOfWeek.monday,
       onDaySelected: (day, event, holidays) {
@@ -18,6 +19,7 @@ class CalendarViewModel with ChangeNotifier {
   }
   Widget buildReturnCalendar(CalendarController calendarController) {
     return TableCalendar(
+       startDay: DateTime.now(),
       calendarController: calendarController,
       startingDayOfWeek: StartingDayOfWeek.monday,
       onDaySelected: (day, event, holidays) {

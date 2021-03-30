@@ -99,7 +99,7 @@ class _HomeState extends State<Home> {
           margin: EdgeInsets.all(20.0),
           child: InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => FligthScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => travel()));
             },
             splashColor: Colors.black,
             child: Center(
