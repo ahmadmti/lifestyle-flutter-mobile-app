@@ -327,7 +327,7 @@ class _MyFlightInfoFieldState extends State<MyFlightInfoField> {
                             return FittedBox(
                               fit: BoxFit.fitWidth,
                               child: Text(
-                                snapshot.data != null ? "${snapshot.data}" : "Select Airport",
+                                snapshot.data != null ? "${snapshot.data}" : "",
                                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.w400, color: Colors.black),
                               ),
                             );

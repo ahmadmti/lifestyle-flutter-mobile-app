@@ -22,7 +22,7 @@ class AirportApiClient {
   };
   Future<Flights> getDestinationID() async {
     final response = await http.get(
-        "http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0/FR/eur/en-US/us/anywhere/anytime/anytime?apikey=prtl6749387986743898559646983194",
+        "https://partners.api.skyscanner.net/apiservices/browseroutes/v1.0/FR/eur/en-US/us/anywhere/anytime/anytime?apikey=prtl6749387986743898559646983194",
         headers: _skyscannerHeaders);
     if (response.statusCode == 200) {
       debugPrint("${response.body}");

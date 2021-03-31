@@ -50,7 +50,7 @@ class _TicketUploadScreenState extends State<TicketUploadScreen> {
                 ),
                 onPressed: () async {
                   _pathList = await _getPathList();
-                  setState(() {});
+                  if (_pathList != null && _pathList.isNotEmpty) setState(() {});
                 }),
             IconButton(
                 icon: Icon(
@@ -59,7 +59,7 @@ class _TicketUploadScreenState extends State<TicketUploadScreen> {
                 ),
                 onPressed: () async {
                   setState(() {
-                  _pathList = new List<String>();
+                    _pathList = new List<String>();
                   });
                 })
           ],
@@ -67,9 +67,7 @@ class _TicketUploadScreenState extends State<TicketUploadScreen> {
         body: SafeArea(
             child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 20.0,
-                    mainAxisSpacing: 20.0),
+                    crossAxisCount: 3, crossAxisSpacing: 20.0, mainAxisSpacing: 20.0),
                 itemCount: _pathList.length,
                 itemBuilder: (context, index) {
                   return (Image.file(File("${_pathList[index]}")));

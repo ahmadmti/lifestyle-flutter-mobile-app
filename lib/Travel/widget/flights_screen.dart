@@ -19,7 +19,6 @@ class FligthScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         centerTitle: true,
-       
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -57,32 +56,31 @@ class FligthScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
             child: PreferredSize(
-              
-                  preferredSize: Size.fromHeight(30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Icon(
-            Icons.flight_takeoff,
-            size: 30,
-                      ),
-                      Text(
-            "\tDeparture Date",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
-                      ),
-                      Consumer<SearchViewModel>(builder: (context, item, child) {
-                        return FutureBuilder<String>(
-                          future: _getDepartureDate(),
-                          builder: (BuildContext context, AsyncSnapshot snapshot) {
-                            return Text(
-                              snapshot.data != null ? "${snapshot.data.substring(0, 10)} " : "Select Airport",
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
-                            );
-                          },
-                        );
-                      })
-                    ],
-                  )),
+                preferredSize: Size.fromHeight(30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Icon(
+                      Icons.flight_takeoff,
+                      size: 30,
+                    ),
+                    Text(
+                      "\tDeparture Date",
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                    ),
+                    Consumer<SearchViewModel>(builder: (context, item, child) {
+                      return FutureBuilder<String>(
+                        future: _getDepartureDate(),
+                        builder: (BuildContext context, AsyncSnapshot snapshot) {
+                          return Text(
+                            snapshot.data != null ? "${snapshot.data.substring(0, 10)} " : "Select Airport",
+                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                          );
+                        },
+                      );
+                    })
+                  ],
+                )),
           ),
           Expanded(
             child: Container(child: Consumer<AirportViewModel>(builder: (
@@ -97,7 +95,7 @@ class FligthScreen extends StatelessWidget {
                     print("size: ${snapshot.data}");
 
                     if (snapshot.hasData) {
-                      if (snapshot.data != null && snapshot.data.quotes.length>0) {
+                      if (snapshot.data != null && snapshot.data.quotes.length > 0) {
                         return ListView.builder(
                           itemCount: snapshot.data.quotes.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -110,12 +108,17 @@ class FligthScreen extends StatelessWidget {
                                   onTap: () async {
                                     String _carrierName = snapshot.data.carriers[index].name;
                                     String _tmpUrl = await _getUrl(_carrierName);
-                                    _tmpUrl = _tmpUrl.substring(0, _tmpUrl.length - 1);
-                                    String _url = 'https:$_tmpUrl';
-                                    debugPrint("URL $_url");
-                                    _launchURL(_url).then((value) {
+
+                                    if (_tmpUrl == null) {
                                       _showAlertDialog(context);
-                                    });
+                                    } else {
+                                      _tmpUrl = _tmpUrl.substring(0, _tmpUrl.length - 1);
+                                      String _url = 'https:$_tmpUrl';
+                                      debugPrint("URL $_url");
+                                      _launchURL(_url).then((value) {
+                                        _showAlertDialog(context);
+                                      });
+                                    }
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -210,6 +213,7 @@ class FligthScreen extends StatelessWidget {
                                                   ? Colors.yellow
                                                   : Colors.black,
                                               onPressed: () {
+                                                //todo: fav 
                                                 context.read<AirportViewModel>().onPressed();
                                               },
                                             ),
@@ -250,6 +254,7 @@ class FligthScreen extends StatelessWidget {
           actions: [
             FlatButton(
                 onPressed: () {
+                  Navigator.of(context).pop();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => TicketUploadScreen()));
                 },
                 child: Text("Yes")),
@@ -275,6 +280,7 @@ class FligthScreen extends StatelessWidget {
 
   _getUrl(String carrirerName) async {
     var url = await Database().fetchURLfromDB(carrirerName);
+    if (url.data() == null) return null;
     String urlString = url.data().toString().split(':')[2];
     return urlString;
   }
