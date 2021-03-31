@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluid_bottom_nav_bar/fluid_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,6 +10,10 @@ import 'package:lifestyle/Finance/widgetsIncome/transaction_list.dart';
 import 'package:lifestyle/Finance/widgetsIncome/chart.dart';
 
 import '../Finance/models/transaction.dart';
+import '../home.dart';
+import '../mainHome.dart';
+import '../settings.dart';
+import '../userAccount.dart';
 
 class addBudget extends StatefulWidget {
   @override
@@ -20,6 +25,7 @@ class addBudgetState extends State<addBudget> {
   bool _showChart = false;
   final FirebaseFirestore db = FirebaseFirestore.instance;
     var firebaseUser = FirebaseAuth.instance.currentUser;
+  Widget _child;
 
   List<mTransaction> get _recentTransactions {
     return _userTransactions.where((tx) {
@@ -188,9 +194,55 @@ class addBudgetState extends State<addBudget> {
                     child: Icon(Icons.add),
                     onPressed: () => _startAddNewTransaction(context),
                   ),
+                  bottomNavigationBar: FluidNavBar(
+          icons: [
+            FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+            FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+            FluidNavBarIcon(
+                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
+          ],
+          onChange: _handleNavigationChange,
+          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+          scaleFactor: 1.5,
+          defaultIndex: 1,
+          itemBuilder: (icon, item) => Semantics(
+            label: icon.extras["label"],
+            child: item,
+          ),
+        ),
           );
   }
 
+void _handleNavigationChange(int index) {
+    setState(() {
+      switch (index) {
+        case 0:
+        _child = settings();
+        Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          break;
+
+        case 1:
+         _child = Home();
+          Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+          break;
+
+        case 2:
+       _child = userAccount();
+Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          break;
+      }
+      _child = AnimatedSwitcher(
+        switchInCurve: Curves.easeOut,
+        switchOutCurve: Curves.easeIn,
+        duration: Duration(milliseconds: 500),
+        child: _child,
+      );
+    });
+  }
+  
   fetchBudget() {
     db.collection("transactions").doc(firebaseUser.uid).collection("budget").get().then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((element) {

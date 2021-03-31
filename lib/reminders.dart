@@ -10,6 +10,7 @@ import 'package:lifestyle/BirthdayReminder/birthdayHome.dart';
 import 'BirthdayReminder/BirthdayMain.dart';
 import 'WaterReminder/screens/data_entry_screen.dart';
 import 'bad_habit_home.dart';
+import 'home.dart';
 
 class reminders extends StatefulWidget {
   @override
@@ -150,24 +151,22 @@ class remindersState extends State<reminders> {
             ]),
           ),
         ),
-        // bottomNavigationBar: FluidNavBar(
-        //   icons: [
-        //     FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
-        //     FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
-        //     FluidNavBarIcon(
-        //         icon: Icons.supervised_user_circle_outlined,
-        //         backgroundColor: Colors.blue,
-        //         extras: {"label": "account"}),
-        //   ],
-        //   onChange: _handleNavigationChange,
-        //   style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
-        //   scaleFactor: 1.5,
-        //   defaultIndex: 1,
-        //   itemBuilder: (icon, item) => Semantics(
-        //     label: icon.extras["label"],
-        //     child: item,
-        //   ),
-        // ),
+        bottomNavigationBar: FluidNavBar(
+          icons: [
+            FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+            FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+            FluidNavBarIcon(
+                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
+          ],
+          onChange: _handleNavigationChange,
+          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+          scaleFactor: 1.5,
+          defaultIndex: 1,
+          itemBuilder: (icon, item) => Semantics(
+            label: icon.extras["label"],
+            child: item,
+          ),
+        ),
         /* BottomAppBar(
               shape: CircularNotchedRectangle(),
               child: Container(
@@ -212,21 +211,25 @@ class remindersState extends State<reminders> {
       ),
     );
   }
-
-  void _handleNavigationChange(int index) {
+void _handleNavigationChange(int index) {
     setState(() {
       switch (index) {
         case 0:
-          _child = settings();
-          Navigator.push(context, MaterialPageRoute(builder: (context) => settings()));
+        _child = settings();
+        Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
           break;
+
         case 1:
-          _child = mainHome();
-          Navigator.push(context, MaterialPageRoute(builder: (context) => mainHome()));
+         _child = Home();
+          Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
           break;
+
         case 2:
-          _child = userAccount();
-          Navigator.push(context, MaterialPageRoute(builder: (context) => userAccount()));
+       _child = userAccount();
+Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
           break;
       }
       _child = AnimatedSwitcher(

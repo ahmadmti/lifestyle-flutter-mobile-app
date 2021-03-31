@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:fluid_bottom_nav_bar/fluid_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:lifestyle/mainHome.dart';
 import 'package:lifestyle/settings.dart';
 import 'package:lifestyle/userAccount.dart';
+
+import '../home.dart';
 
 class EmergencyHospitals extends StatefulWidget {
   @override
@@ -115,7 +118,53 @@ class EmergencyHospitalsState extends State<EmergencyHospitals> {
           )),
         ),
       ),
+
+      bottomNavigationBar: FluidNavBar(
+          icons: [
+            FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+            FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+            FluidNavBarIcon(
+                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
+          ],
+          onChange: _handleNavigationChange,
+          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+          scaleFactor: 1.5,
+          defaultIndex: 1,
+          itemBuilder: (icon, item) => Semantics(
+            label: icon.extras["label"],
+            child: item,
+          ),
+        ),
     ));
+  }
+  void _handleNavigationChange(int index) {
+    setState(() {
+      switch (index) {
+        case 0:
+        _child = settings();
+        Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          break;
+
+        case 1:
+         _child = Home();
+          Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+          break;
+
+        case 2:
+       _child = userAccount();
+Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          break;
+      }
+      _child = AnimatedSwitcher(
+        switchInCurve: Curves.easeOut,
+        switchOutCurve: Curves.easeIn,
+        duration: Duration(milliseconds: 500),
+        child: _child,
+      );
+    });
   }
 
   _callNumberH(number) async {

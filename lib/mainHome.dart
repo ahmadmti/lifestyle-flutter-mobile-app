@@ -25,6 +25,10 @@ import 'financeHome.dart';
 import 'motivation.dart';
 
 class mainHome extends StatefulWidget {
+  final index;
+
+  mainHome({this.index = 1});
+
   @override
   State<StatefulWidget> createState() {
     return mainHomeState();
@@ -49,7 +53,13 @@ class mainHomeState extends State<mainHome> {
   Stream slides;
   @override
   void initState() {
-    _child = Home();
+    if (widget.index == 0)
+      _child = settings();
+    else if (widget.index == 1)
+      _child = Home();
+    else
+      _child = userAccount();
+
     super.initState();
     getData();
     _queryDb();
@@ -164,7 +174,7 @@ class mainHomeState extends State<mainHome> {
           onChange: _handleNavigationChange,
           style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
           scaleFactor: 1.5,
-          defaultIndex: 1,
+          defaultIndex: widget.index,
           itemBuilder: (icon, item) => Semantics(
             label: icon.extras["label"],
             child: item,

@@ -147,22 +147,22 @@ class _MyFlightInfoFieldState extends State<MyFlightInfoField> {
           ),
         ),
       ),
-      // bottomNavigationBar: FluidNavBar(
-      //   icons: [
-      //     FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
-      //     FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
-      //     FluidNavBarIcon(
-      //         icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"}),
-      //   ],
-      //   onChange: _handleNavigationChange,
-      //   style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
-      //   scaleFactor: 1.5,
-      //   defaultIndex: 1,
-      //   itemBuilder: (icon, item) => Semantics(
-      //     label: icon.extras["label"],
-      //     child: item,
-      //   ),
-      // ),
+     bottomNavigationBar: FluidNavBar(
+          icons: [
+            FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+            FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+            FluidNavBarIcon(
+                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
+          ],
+          onChange: _handleNavigationChange,
+          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+          scaleFactor: 1.5,
+          defaultIndex: 1,
+          itemBuilder: (icon, item) => Semantics(
+            label: icon.extras["label"],
+            child: item,
+          ),
+        ),
     );
   }
 

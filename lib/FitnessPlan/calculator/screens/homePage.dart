@@ -1,3 +1,4 @@
+import 'package:fluid_bottom_nav_bar/fluid_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -9,6 +10,11 @@ import 'package:lifestyle/FitnessPlan/calculator/utils/dynamaicTheme.dart';
 import 'package:lifestyle/FitnessPlan/calculator/data/calc.dart';
 import 'package:lifestyle/FitnessPlan/calculator/utils/extractedWidgets.dart';
 
+import '../../../home.dart';
+import '../../../mainHome.dart';
+import '../../../settings.dart';
+import '../../../userAccount.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -18,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   Color inActiveColor = Colors.grey[200];
   Color inActiveColorDark = Colors.grey[600];
   Color activeColor = Colors.blue;
+  Widget _child;
 
   double age = 18, weight = 60, height = 170;
 
@@ -489,9 +496,54 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+
+      bottomNavigationBar: FluidNavBar(
+          icons: [
+            FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+            FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+            FluidNavBarIcon(
+                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
+          ],
+          onChange: _handleNavigationChange,
+          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+          scaleFactor: 1.5,
+          defaultIndex: 1,
+          itemBuilder: (icon, item) => Semantics(
+            label: icon.extras["label"],
+            child: item,
+          ),
+        ),
     );
   }
+void _handleNavigationChange(int index) {
+    setState(() {
+      switch (index) {
+        case 0:
+        _child = settings();
+        Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          break;
 
+        case 1:
+         _child = Home();
+          Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+          break;
+
+        case 2:
+       _child = userAccount();
+Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          break;
+      }
+      _child = AnimatedSwitcher(
+        switchInCurve: Curves.easeOut,
+        switchOutCurve: Curves.easeIn,
+        duration: Duration(milliseconds: 500),
+        child: _child,
+      );
+    });
+  }
   ActivityLevel getActivityLevel() {
     if (activityLevelValue == "Sedentary")
       return ActivityLevel.sedentary;

@@ -1,3 +1,4 @@
+import 'package:fluid_bottom_nav_bar/fluid_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -6,6 +7,7 @@ import 'package:lifestyle/Health/DietPlan/utils/CommonUtils.dart';
 import 'package:lifestyle/Health/DietPlan/utils/DimensionUtils.dart';
 import 'package:lifestyle/Health/DietPlan/utils/FontUtils.dart';
 import 'package:logger/logger.dart';
+import '../../home.dart';
 import 'models/DietPlanData.dart';
 import 'package:lifestyle/mainHome.dart';
 import 'package:lifestyle/userAccount.dart';
@@ -23,7 +25,8 @@ class _dietDetialScreenState extends State<dietDetialScreen> {
     fontWeight: FontWeight.bold,
     fontSize: DimensionUtils.txt_size_body1,
     color: ColorUtils.primary,
-  );
+  );  Widget _child;
+
 
   static TextStyle style = TextStyle(
     fontFamily: FontUtils.FONT_FAMILY_AGEO,
@@ -502,10 +505,9 @@ class _dietDetialScreenState extends State<dietDetialScreen> {
           title: Text(strTitle,
               style: styleAppName.copyWith(color: ColorUtils.white)),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+            icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => dietPlan()));
+              Navigator.pop(context);
             },
           ),
         ),
@@ -514,43 +516,52 @@ class _dietDetialScreenState extends State<dietDetialScreen> {
             child: _widgetOptions.elementAt(_selectedIndex),
           ),
         ),
-        bottomNavigationBar: BottomAppBar(
-            shape: CircularNotchedRectangle(),
-            child: Container(
-              height: 75,
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  IconButton(
-                    iconSize: 50.0,
-                    icon: Icon(Icons.settings),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => settings()));
-                    },
-                  ),
-                  IconButton(
-                    iconSize: 50.0,
-                    icon: Icon(Icons.home),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => mainHome()));
-                    },
-                  ),
-                  IconButton(
-                    iconSize: 50.0,
-                    icon: Icon(Icons.supervised_user_circle_outlined),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => userAccount()));
-                    },
-                  )
-                ],
-              ),
-            )));
+        bottomNavigationBar: FluidNavBar(
+          icons: [
+            FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+            FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+            FluidNavBarIcon(
+                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
+          ],
+          onChange: _handleNavigationChange,
+          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+          scaleFactor: 1.5,
+          defaultIndex: 1,
+          itemBuilder: (icon, item) => Semantics(
+            label: icon.extras["label"],
+            child: item,
+          ),
+        ),);
+  }
+
+  void _handleNavigationChange(int index) {
+    setState(() {
+      switch (index) {
+        case 0:
+        _child = settings();
+        Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          break;
+
+        case 1:
+         _child = Home();
+          Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+          break;
+
+        case 2:
+       _child = userAccount();
+Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          break;
+      }
+      _child = AnimatedSwitcher(
+        switchInCurve: Curves.easeOut,
+        switchOutCurve: Curves.easeIn,
+        duration: Duration(milliseconds: 500),
+        child: _child,
+      );
+    });
   }
 }
 

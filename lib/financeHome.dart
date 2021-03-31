@@ -15,6 +15,7 @@ import 'package:lifestyle/medicalHome.dart';
 import 'package:lifestyle/settings.dart';
 import 'package:lifestyle/userAccount.dart';
 
+import 'home.dart';
 import 'login/Login.dart';
 
 class financeHome extends StatefulWidget {
@@ -189,6 +190,26 @@ class financeHomePage extends State<financeHome> {
                       ],
                     ),
                   ),
+                  bottomNavigationBar: FluidNavBar(
+                    icons: [
+                      FluidNavBarIcon(
+                          icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+                      FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+                      FluidNavBarIcon(
+                          icon: Icons.supervised_user_circle_outlined,
+                          backgroundColor: Colors.blue,
+                          extras: {"label": "account"})
+                    ],
+                    onChange: _handleNavigationChange,
+                    style: FluidNavBarStyle(
+                        iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+                    scaleFactor: 1.5,
+                    defaultIndex: 1,
+                    itemBuilder: (icon, item) => Semantics(
+                      label: icon.extras["label"],
+                      child: item,
+                    ),
+                  ),
                 ))
               ],
             ),
@@ -302,11 +323,40 @@ class financeHomePage extends State<financeHome> {
     );
   }
 
+void _handleNavigationChange(int index) {
+    setState(() {
+      switch (index) {
+        case 0:
+        _child = settings();
+        Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          break;
+
+        case 1:
+         _child = Home();
+          Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+          break;
+
+        case 2:
+       _child = userAccount();
+Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          break;
+      }
+      _child = AnimatedSwitcher(
+        switchInCurve: Curves.easeOut,
+        switchOutCurve: Curves.easeIn,
+        duration: Duration(milliseconds: 500),
+        child: _child,
+      );
+    });
+  }
   fetchStats() {
-     totalBudget = 0.0;
-   totalIncome = 0.0;
-   totalExpense = 0.0;
-   
+    totalBudget = 0.0;
+    totalIncome = 0.0;
+    totalExpense = 0.0;
+
     db.collection("transactions").doc(firebaseUser.uid).collection("budget").get().then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((element) {
         totalBudget = totalBudget + double.parse(element['amount'].toString());

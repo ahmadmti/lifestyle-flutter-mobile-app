@@ -1,9 +1,12 @@
+import 'package:fluid_bottom_nav_bar/fluid_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:lifestyle/emergency/emergency_hospitals.dart';
 import 'package:lifestyle/mainHome.dart';
 import 'package:lifestyle/settings.dart';
 import 'package:lifestyle/userAccount.dart';
+
+import '../home.dart';
 
 class emergency extends StatefulWidget {
   @override
@@ -131,48 +134,52 @@ class emergencyState extends State<emergency> {
                 ],
               )),
     ),),
-            // bottomNavigationBar: BottomAppBar(
-            //     shape: CircularNotchedRectangle(),
-            //     child: Container(
-            //       height: 70,
-            //       child: Row(
-            //         mainAxisSize: MainAxisSize.max,
-            //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //         children: <Widget>[
-            //           IconButton(
-            //             iconSize: 50.0,
-            //             icon: Icon(Icons.settings),
-            //             onPressed: () {
-            //               Navigator.push(
-            //                   context,
-            //                   MaterialPageRoute(
-            //                       builder: (context) => settings()));
-            //             },
-            //           ),
-            //           IconButton(
-            //             iconSize: 50.0,
-            //             icon: Icon(Icons.home),
-            //             onPressed: () {
-            //               Navigator.push(
-            //                   context,
-            //                   MaterialPageRoute(
-            //                       builder: (context) => mainHome()));
-            //             },
-            //           ),
-            //           IconButton(
-            //             iconSize: 50.0,
-            //             icon: Icon(Icons.supervised_user_circle_outlined),
-            //             onPressed: () {
-            //               Navigator.push(
-            //                   context,
-            //                   MaterialPageRoute(
-            //                       builder: (context) => userAccount()));
-            //             },
-            //           )
-            //         ],
-            //       ),
-            //     )),
+            bottomNavigationBar: FluidNavBar(
+          icons: [
+            FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+            FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+            FluidNavBarIcon(
+                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
+          ],
+          onChange: _handleNavigationChange,
+          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+          scaleFactor: 1.5,
+          defaultIndex: 1,
+          itemBuilder: (icon, item) => Semantics(
+            label: icon.extras["label"],
+            child: item,
+          ),
+        ),
                 ));
+  }
+  void _handleNavigationChange(int index) {
+    setState(() {
+      switch (index) {
+        case 0:
+        _child = settings();
+        Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          break;
+
+        case 1:
+         _child = Home();
+          Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+          break;
+
+        case 2:
+       _child = userAccount();
+Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          break;
+      }
+      _child = AnimatedSwitcher(
+        switchInCurve: Curves.easeOut,
+        switchOutCurve: Curves.easeIn,
+        duration: Duration(milliseconds: 500),
+        child: _child,
+      );
+    });
   }
   _callNumberA() async{
     const number = '998'; //set the number here

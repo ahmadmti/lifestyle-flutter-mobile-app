@@ -1,10 +1,12 @@
 import 'package:custom_tab/custom_tab.dart';
+import 'package:fluid_bottom_nav_bar/fluid_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestyle/userAccount.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:lifestyle/mainHome.dart';
 import 'package:lifestyle/settings.dart';
 
+import 'home.dart';
 import 'main.dart';
 
 class shopping extends StatefulWidget {
@@ -20,7 +22,7 @@ class shoppingState extends State<shopping> {
   var man = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSuvpWGcijPlOi4c3KIbq7hkiIu5x7kY9x9w&usqp=CAU";
   var woman = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQxnm1NuCwL1NR6r4TlDV-aEbMOfsSCBAZIw&usqp=CAU";
   var kid = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPsHbpiok68WdJ2hEE5XPRUOKWg9w6IiDktA&usqp=CAU";
-
+Widget _child;
   @override
   void initState() {
     // TODO: implement initState
@@ -125,8 +127,56 @@ class shoppingState extends State<shopping> {
                       ],
                     )),
             indicatorColor: Colors.blue,
-          )),
+          ),
+
+         bottomNavigationBar: FluidNavBar(
+          icons: [
+            FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+            FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+            FluidNavBarIcon(
+                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
+          ],
+          onChange: _handleNavigationChange,
+          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+          scaleFactor: 1.5,
+          defaultIndex: 1,
+          itemBuilder: (icon, item) => Semantics(
+            label: icon.extras["label"],
+            child: item,
+          ),
+        ),
+          ),
     );
+  }
+
+  void _handleNavigationChange(int index) {
+    setState(() {
+      switch (index) {
+        case 0:
+        _child = settings();
+        Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          break;
+
+        case 1:
+         _child = Home();
+          Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+          break;
+
+        case 2:
+       _child = userAccount();
+Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          break;
+      }
+      _child = AnimatedSwitcher(
+        switchInCurve: Curves.easeOut,
+        switchOutCurve: Curves.easeIn,
+        duration: Duration(milliseconds: 500),
+        child: _child,
+      );
+    });
   }
 
   launchBrowser(url) async {
