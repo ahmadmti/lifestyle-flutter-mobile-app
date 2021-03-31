@@ -52,24 +52,26 @@ class _birthdayHomeState extends State<birthdayHome> {
 
   @override
   Widget build(BuildContext context) {
-        final GlobalBlocBirthday _globalBloc = Provider.of<GlobalBlocBirthday>(context);
+    final GlobalBlocBirthday _globalBloc = Provider.of<GlobalBlocBirthday>(context);
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => reminders(),
                 ),
               );
-            },),
-        title: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Text("Birthday Reminder"),
-        ),
-
-        actions: <Widget>[
+            },
+          ),
+          title: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Text("Birthday Reminder"),
+          ),
+          actions: <Widget>[
             IconButton(
               icon: const Icon(
                 Icons.add,
@@ -85,9 +87,8 @@ class _birthdayHomeState extends State<birthdayHome> {
                 );
               },
             ),
-          ]
-      ),
-      body:  Container(
+          ]),
+      body: Container(
         color: Color(0xFFF6F8FC),
         child: Column(
           children: <Widget>[
@@ -102,21 +103,21 @@ class _birthdayHomeState extends State<birthdayHome> {
         ),
       ),
       bottomNavigationBar: FluidNavBar(
-          icons: [
-            FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
-            FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
-            FluidNavBarIcon(
-                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
-          ],
-          onChange: _handleNavigationChange,
-          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
-          scaleFactor: 1.5,
-          defaultIndex: 1,
-          itemBuilder: (icon, item) => Semantics(
-            label: icon.extras["label"],
-            child: item,
-          ),
+        icons: [
+          FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+          FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+          FluidNavBarIcon(
+              icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
+        ],
+        onChange: _handleNavigationChange,
+        style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+        scaleFactor: 1.5,
+        defaultIndex: 1,
+        itemBuilder: (icon, item) => Semantics(
+          label: icon.extras["label"],
+          child: item,
         ),
+      ),
     );
   }
 
@@ -124,21 +125,21 @@ class _birthdayHomeState extends State<birthdayHome> {
     setState(() {
       switch (index) {
         case 0:
-        _child = settings();
-        Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          _child = settings();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 0)), (Route<dynamic> route) => false);
           break;
 
         case 1:
-         _child = Home();
+          _child = Home();
           Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+              MaterialPageRoute(builder: (context) => mainHome(index: 1)), (Route<dynamic> route) => false);
           break;
 
         case 2:
-       _child = userAccount();
-Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          _child = userAccount();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 2)), (Route<dynamic> route) => false);
           break;
       }
       _child = AnimatedSwitcher(
@@ -150,6 +151,7 @@ Navigator.of(context).pushAndRemoveUntil(
     });
   }
 }
+
 class BottomContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -166,10 +168,7 @@ class BottomContainer extends StatelessWidget {
               child: Text(
                 "Add Reminder",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 24, color: Colors.blue, fontWeight: FontWeight.bold),
               ),
             ),
           );
@@ -178,11 +177,10 @@ class BottomContainer extends StatelessWidget {
             color: Colors.white,
             child: GridView.builder(
               padding: EdgeInsets.only(top: 12),
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
-                return MedicineCard(snapshot.data[index], _globalBloc);
+                return MedicineCard(snapshot.data[index], _globalBloc, index);
               },
             ),
           );
@@ -195,10 +193,11 @@ class BottomContainer extends StatelessWidget {
 class MedicineCard extends StatelessWidget {
   final Birthday birthday;
   final GlobalBlocBirthday globalBloc;
+  final index;
 
-  MedicineCard(this.birthday, this.globalBloc);
+  MedicineCard(this.birthday, this.globalBloc, this.index);
 
- /* Hero makeIcon(double size) {
+  /* Hero makeIcon(double size) {
     if (medicine.medicineType == "Pill") {
       return Hero(
         tag: medicine.medicineName + medicine.medicineType,
@@ -235,13 +234,11 @@ class MedicineCard extends StatelessWidget {
       child: InkWell(
         highlightColor: Colors.white,
         splashColor: Colors.grey,
-                onLongPress: () => _showAlertDialog(context, birthday, globalBloc),
-
+        onLongPress: () => _showAlertDialog(context, birthday, globalBloc, index),
         onTap: () {
           Navigator.of(context).push(
             PageRouteBuilder<Null>(
-              pageBuilder: (BuildContext context, Animation<double> animation,
-                  Animation<double> secondaryAnimation) {
+              pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
                 return AnimatedBuilder(
                     animation: animation,
                     builder: (BuildContext context, Widget child) {
@@ -264,30 +261,24 @@ class MedicineCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-               // makeIcon(50.0),
+                // makeIcon(50.0),
                 Hero(
                   tag: birthday.birthdayName,
                   child: Material(
                     color: Colors.transparent,
                     child: Text(
                       birthday.birthdayName,
-                      style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.blue,
-                          fontWeight: FontWeight.w500),
+                      style: TextStyle(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ),
                 Text(
                   birthday.interval == 0
-                      ?   "On time":
-                  birthday.interval == 1
-                      ?  birthday.interval.toString() + " hour before"
-                      : birthday.interval.toString() + " hours before",
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFFC9C9C9),
-                      fontWeight: FontWeight.w400),
+                      ? "On time"
+                      : birthday.interval == 1
+                          ? birthday.interval.toString() + " hour before"
+                          : birthday.interval.toString() + " hours before",
+                  style: TextStyle(fontSize: 16, color: Color(0xFFC9C9C9), fontWeight: FontWeight.w400),
                 )
               ],
             ),
@@ -297,28 +288,31 @@ class MedicineCard extends StatelessWidget {
     );
   }
 
-  _showAlertDialog(BuildContext context,Birthday birthday, GlobalBlocBirthday globalBloc) => showDialog(
+  _showAlertDialog(BuildContext context, Birthday birthday, GlobalBlocBirthday globalBloc, index) => showDialog(
         useRootNavigator: false,
         context: context,
         builder: (_) => AlertDialog(
-          title: Text("${birthday.birthdayName??''}"),
+          title: Text("${birthday.birthdayName ?? ''}"),
           actions: [
             FlatButton(
                 onPressed: () {
                   globalBloc.removeBirthday(birthday).then((value) {
                     Navigator.of(context).pop();
-                    
                   });
                 },
                 child: Text("Delete", style: TextStyle(color: Colors.redAccent))),
             FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewEntryBirthday(birthday: birthday, index: index),
+                    ),
+                  );
                 },
                 child: Text("Edit")),
           ],
         ),
       );
 }
-
-

@@ -23,6 +23,10 @@ import '../userAccount.dart';
 import 'birthday_reminder_bloc.dart';
 
 class NewEntryBirthday extends StatefulWidget {
+  final Birthday birthday;
+  final int index;
+  NewEntryBirthday({this.birthday, this.index=-1});
+
   @override
   _NewEntryBirthdayState createState() => _NewEntryBirthdayState();
 }
@@ -46,8 +50,8 @@ class _NewEntryBirthdayState extends State<NewEntryBirthday> {
   void initState() {
     super.initState();
     _newEntryBloc = NewEntryBirthdayBloc();
-    nameController = TextEditingController();
-    noteController = TextEditingController();
+    nameController = TextEditingController(text: widget.birthday != null ? widget.birthday.birthdayName : '');
+    noteController = TextEditingController(text: widget.birthday != null ? widget.birthday.birthdayNote : '');
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -132,7 +136,7 @@ class _NewEntryBirthdayState extends State<NewEntryBirthday> {
                 height: 15,
               ),
               //ScheduleCheckBoxes(),
-              IntervalSelection(),
+              IntervalSelection(birthday: widget.birthday != null ? widget.birthday : null),
               SizedBox(
                 height: 20,
               ),
@@ -140,7 +144,7 @@ class _NewEntryBirthdayState extends State<NewEntryBirthday> {
                 title: "Reminder Date",
                 isRequired: true,
               ),
-              SelectDate(),
+              SelectDate(birthday: widget.birthday != null ? widget.birthday : null),
               SizedBox(
                 height: 15,
               ),
@@ -149,7 +153,7 @@ class _NewEntryBirthdayState extends State<NewEntryBirthday> {
                 title: "Reminder Time",
                 isRequired: true,
               ),
-              SelectTime(),
+              SelectTime(birthday: widget.birthday != null ? widget.birthday : null),
               SizedBox(
                 height: 50,
               ),
@@ -231,7 +235,7 @@ class _NewEntryBirthdayState extends State<NewEntryBirthday> {
                           date: selectedDate,
                         );
 
-                        _globalBloc.updateBirthdayList(newEntryBirthday);
+                        _globalBloc.updateBirthdayList(newEntryBirthday, widget.index);
 
                         Navigator.pushReplacement(
                           context,
@@ -253,49 +257,44 @@ class _NewEntryBirthdayState extends State<NewEntryBirthday> {
           ),
         ),
       ),
-
       bottomNavigationBar: FluidNavBar(
-          icons: [
-            FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
-            FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
-            FluidNavBarIcon(
-                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
-          ],
-          onChange: _handleNavigationChange,
-          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
-          scaleFactor: 1.5,
-          defaultIndex: 1,
-          itemBuilder: (icon, item) => Semantics(
-            label: icon.extras["label"],
-            child: item,
-          ),
+        icons: [
+          FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+          FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+          FluidNavBarIcon(
+              icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
+        ],
+        onChange: _handleNavigationChange,
+        style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+        scaleFactor: 1.5,
+        defaultIndex: 1,
+        itemBuilder: (icon, item) => Semantics(
+          label: icon.extras["label"],
+          child: item,
         ),
+      ),
     );
-
-    
-
-  
   }
 
-void _handleNavigationChange(int index) {
+  void _handleNavigationChange(int index) {
     setState(() {
       switch (index) {
         case 0:
-        _child = settings();
-        Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          _child = settings();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 0)), (Route<dynamic> route) => false);
           break;
 
         case 1:
-         _child = Home();
+          _child = Home();
           Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+              MaterialPageRoute(builder: (context) => mainHome(index: 1)), (Route<dynamic> route) => false);
           break;
 
         case 2:
-       _child = userAccount();
-Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          _child = userAccount();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 2)), (Route<dynamic> route) => false);
           break;
       }
       _child = AnimatedSwitcher(
@@ -306,6 +305,7 @@ Navigator.of(context).pushAndRemoveUntil(
       );
     });
   }
+
   void initializeErrorListen() {
     _newEntryBloc.errorState$.listen(
       (EntryError error) {
@@ -355,6 +355,9 @@ Navigator.of(context).pushAndRemoveUntil(
 }
 
 class IntervalSelection extends StatefulWidget {
+  final Birthday birthday;
+  IntervalSelection({this.birthday});
+
   @override
   _IntervalSelectionState createState() => _IntervalSelectionState();
 }
@@ -371,8 +374,22 @@ class _IntervalSelectionState extends State<IntervalSelection> {
   var _selected = 0;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.birthday != null) {
+      print("interval: ${widget.birthday.interval}");
+      _selected = widget.birthday.interval;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final NewEntryBirthdayBloc _newEntryBloc = Provider.of<NewEntryBirthdayBloc>(context);
+
+    if (widget.birthday != null) {
+      _newEntryBloc.updateInterval(_selected);
+    }
+
     return Padding(
       padding: EdgeInsets.only(top: 8.0),
       child: Container(
@@ -404,7 +421,7 @@ class _IntervalSelectionState extends State<IntervalSelection> {
                 return DropdownMenuItem<int>(
                   value: value,
                   child: Text(
-                     "${value.toString()}h",
+                    "${value.toString()}h",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 18,
@@ -416,7 +433,7 @@ class _IntervalSelectionState extends State<IntervalSelection> {
               onChanged: (newVal) {
                 setState(() {
                   _selected = newVal;
-                  _newEntryBloc.updateInterval( newVal);
+                  _newEntryBloc.updateInterval(newVal);
                 });
               },
             ),
@@ -428,6 +445,9 @@ class _IntervalSelectionState extends State<IntervalSelection> {
 }
 
 class SelectDate extends StatefulWidget {
+  final Birthday birthday;
+  SelectDate({this.birthday});
+
   @override
   _SelectDateState createState() => _SelectDateState();
 }
@@ -441,11 +461,15 @@ class _SelectDateState extends State<SelectDate> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
+    // if (widget.birthday != null) {
+    //   _date = widget.birthday.date;
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
     _newEntryBloc = Provider.of<NewEntryBirthdayBloc>(context);
+    if (widget.birthday != null) _newEntryBloc.updateDate(widget.birthday.date);
 
     return Container(
       height: 60,
@@ -473,7 +497,11 @@ class _SelectDateState extends State<SelectDate> {
           },
           child: Center(
             child: Text(
-              _clicked == false ? "Pick Date" : "$_date",
+              (widget.birthday != null)
+                  ? widget.birthday.date
+                  : _clicked == false
+                      ? "Pick Date"
+                      : "$_date",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -488,6 +516,9 @@ class _SelectDateState extends State<SelectDate> {
 }
 
 class SelectTime extends StatefulWidget {
+  final Birthday birthday;
+  SelectTime({this.birthday});
+
   @override
   _SelectTimeState createState() => _SelectTimeState();
 }
@@ -506,6 +537,7 @@ class _SelectTimeState extends State<SelectTime> {
   @override
   Widget build(BuildContext context) {
     _newEntryBloc = Provider.of<NewEntryBirthdayBloc>(context);
+    if ((widget.birthday != null)) _newEntryBloc.updateTime(widget.birthday.time);
 
     return Container(
       height: 60,
@@ -533,9 +565,13 @@ class _SelectTimeState extends State<SelectTime> {
           },
           child: Center(
             child: Text(
-              _clicked == false
-                  ? "Pick Time"
-                  : "${convertTime(_time.hour.toString())}:${convertTime(_time.minute.toString())}",
+              (widget.birthday == null)
+                  ? _clicked == false
+                      ? "Pick Time"
+                      : "${convertTime(_time.hour.toString())}:${convertTime(_time.minute.toString())}"
+                  : (widget.birthday.time.toString().substring(0, 2) +
+                      ":" +
+                      widget.birthday.time.toString().substring(2, 4)),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,

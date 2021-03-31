@@ -312,6 +312,8 @@ class MedicineCard extends StatelessWidget {
             FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
+
+                  
                 },
                 child: Text("Edit")),
           ],
