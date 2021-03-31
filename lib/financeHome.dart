@@ -81,9 +81,6 @@ class financeHomePage extends State<financeHome> {
                       title: Text(
                         'Finance',
                       ),
-                     
-                       
-                      
                     ),
                   ),
                 ),
@@ -106,7 +103,8 @@ class financeHomePage extends State<financeHome> {
                                   margin: EdgeInsets.fromLTRB(40, 0, 20, 0),
                                   child: InkWell(
                                     onTap: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => addExpense())).then((value) => fetchStats());
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => addExpense()))
+                                          .then((value) => fetchStats());
                                     },
                                     splashColor: Colors.white,
                                     child: Center(
@@ -133,7 +131,8 @@ class financeHomePage extends State<financeHome> {
                                   margin: EdgeInsets.fromLTRB(20, 0, 40, 0),
                                   child: InkWell(
                                     onTap: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => addIncome())).then((value) => fetchStats());
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => addIncome()))
+                                          .then((value) => fetchStats());
                                     },
                                     splashColor: Colors.white,
                                     child: Center(
@@ -165,7 +164,8 @@ class financeHomePage extends State<financeHome> {
                                   margin: EdgeInsets.fromLTRB(120, 0, 120, 0),
                                   child: InkWell(
                                     onTap: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => addBudget())).then((value) => fetchStats());
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => addBudget()))
+                                          .then((value) => fetchStats());
                                     },
                                     splashColor: Colors.white,
                                     child: Center(
@@ -303,6 +303,10 @@ class financeHomePage extends State<financeHome> {
   }
 
   fetchStats() {
+     totalBudget = 0.0;
+   totalIncome = 0.0;
+   totalExpense = 0.0;
+   
     db.collection("transactions").doc(firebaseUser.uid).collection("budget").get().then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((element) {
         totalBudget = totalBudget + double.parse(element['amount'].toString());
@@ -320,7 +324,5 @@ class financeHomePage extends State<financeHome> {
         totalExpense = totalExpense + double.parse(element['amount'].toString());
       });
     }).then((value) => setState(() {}));
-
-
   }
 }

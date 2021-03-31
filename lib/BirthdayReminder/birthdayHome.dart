@@ -136,7 +136,7 @@ class BottomContainer extends StatelessWidget {
                   SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
-                return MedicineCard(snapshot.data[index]);
+                return MedicineCard(snapshot.data[index], _globalBloc);
               },
             ),
           );
@@ -148,8 +148,9 @@ class BottomContainer extends StatelessWidget {
 
 class MedicineCard extends StatelessWidget {
   final Birthday birthday;
+  final GlobalBlocBirthday globalBloc;
 
-  MedicineCard(this.birthday);
+  MedicineCard(this.birthday, this.globalBloc);
 
  /* Hero makeIcon(double size) {
     if (medicine.medicineType == "Pill") {
@@ -188,6 +189,8 @@ class MedicineCard extends StatelessWidget {
       child: InkWell(
         highlightColor: Colors.white,
         splashColor: Colors.grey,
+                onLongPress: () => _showAlertDialog(context, birthday, globalBloc),
+
         onTap: () {
           Navigator.of(context).push(
             PageRouteBuilder<Null>(
@@ -247,6 +250,29 @@ class MedicineCard extends StatelessWidget {
       ),
     );
   }
+
+  _showAlertDialog(BuildContext context,Birthday birthday, GlobalBlocBirthday globalBloc) => showDialog(
+        useRootNavigator: false,
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text("${birthday.birthdayName??''}"),
+          actions: [
+            FlatButton(
+                onPressed: () {
+                  globalBloc.removeBirthday(birthday).then((value) {
+                    Navigator.of(context).pop();
+                    
+                  });
+                },
+                child: Text("Delete", style: TextStyle(color: Colors.redAccent))),
+            FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Edit")),
+          ],
+        ),
+      );
 }
 
 

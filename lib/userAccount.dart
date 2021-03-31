@@ -20,7 +20,11 @@ class userAccount extends StatefulWidget {
 }
 
 class userAccountState extends State<userAccount> {
-  var name , email , gender , dob , img;
+  bool edit = false;
+  var name, email, gender, dob, img;
+  String nameChange;
+  TextEditingController nameController;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -31,52 +35,98 @@ class userAccountState extends State<userAccount> {
 
   @override
   Widget build(BuildContext context) {
+    nameController = TextEditingController(text: name ?? '');
     return Center(
         child: Scaffold(
-      
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      body: ListView(
         children: [
-          Container(
-            width: 120,
-            height: 120,
-            margin: EdgeInsets.only(top: 30, bottom: 30),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 8.0,
-                  offset: Offset(0.0, 5.0),
-                ),
-              ],
+          Center(
+            child: Container(
+              width: 120,
+              height: 120,
+              margin: EdgeInsets.only(top: 30, bottom: 30),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 8.0,
+                    offset: Offset(0.0, 5.0),
+                  ),
+                ],
+              ),
+              child: Padding(
+                  padding: EdgeInsets.all(1.0),
+                  child: ImagePickerWidget(
+                    diameter: 120,
+                    initialImage: img ?? defaultAvatar,
+                    shape: ImagePickerWidgetShape.circle, // ImagePickerWidgetShape.square
+                    isEditable: true,
+                    onChange: (File file) {
+                      if (file != null) _updateProfileImg(file);
+                    },
+                  )),
             ),
-            child: Padding(
-                padding: EdgeInsets.all(1.0),
-                child: ImagePickerWidget(
-                  diameter: 120,
-                  initialImage: img ?? defaultAvatar,
-                  shape: ImagePickerWidgetShape.circle, // ImagePickerWidgetShape.square
-                  isEditable: true,
-                  onChange: (File file) {
-                    if (file != null) _updateProfileImg(file);
-                  },
-                )),
           ),
           ListTile(
-            onTap: null,
-            leading: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.person,
-                ),
-              ],
-            ),
-            title: Text("Full Name"),
-            subtitle: Text(name??''),
-          ),
+              leading: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.person,
+                  ),
+                ],
+              ),
+              title: Text("Full Name"),
+              subtitle: !edit
+                  ? Text(name ?? '')
+                  : TextFormField(
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                      autofocus: true,
+                      controller: nameController,
+                      textCapitalization: TextCapitalization.words,
+                      // onSaved: (input) => nameChange = input,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                    ),
+              trailing: !edit
+                  ? IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        edit = true;
+
+                        setState(() {});
+                      })
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                            icon: Icon(Icons.save),
+                            onPressed: () {
+                              print("name: ${nameController.text}");
+                              usersRef
+                                  .child(FirebaseAuth.instance.currentUser.uid)
+                                  .child("name")
+                                  .set(nameController.text)
+                                  .then((_) {
+                                edit = false;
+                                name = nameController.text;
+                                setState(() {});
+                              });
+                            }),
+                        IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              edit = false;
+                              setState(() {});
+                            }),
+                      ],
+                    )),
           Divider(),
           ListTile(
             onTap: null,
@@ -89,7 +139,7 @@ class userAccountState extends State<userAccount> {
               ],
             ),
             title: Text("Email Address"),
-            subtitle: Text(email??''),
+            subtitle: Text(email ?? ''),
           ),
           Divider(
               // color: Colors.black
@@ -104,7 +154,7 @@ class userAccountState extends State<userAccount> {
               ],
             ),
             title: Text("Gender"),
-            subtitle: Text(gender??''),
+            subtitle: Text(gender ?? ''),
           ),
           Divider(
               // color: Colors.black
@@ -119,7 +169,7 @@ class userAccountState extends State<userAccount> {
               ],
             ),
             title: Text("Date of Birth"),
-            subtitle: Text(dob??''),
+            subtitle: Text(dob ?? ''),
           ),
         ],
       ),

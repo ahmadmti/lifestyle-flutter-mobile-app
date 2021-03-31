@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:favorite_button/favorite_button.dart';
 import 'package:lifestyle/Travel/database/db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lifestyle/Travel/database/db.dart';
@@ -11,7 +12,14 @@ import 'package:lifestyle/Travel/view_model/airport_view_model.dart';
 
 import 'upload_ticket_screen.dart';
 
-class FligthScreen extends StatelessWidget {
+class FligthScreen extends StatefulWidget {
+  @override
+  _FligthScreenState createState() => _FligthScreenState();
+}
+
+class _FligthScreenState extends State<FligthScreen> {
+  bool isFavorite = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -205,18 +213,28 @@ class FligthScreen extends StatelessWidget {
                                             Container(
                                               child: Text("${snapshot.data.quotes[index].minPrice} TRY"),
                                             ),
-                                            IconButton(
-                                              icon: Icon(
-                                                Icons.star,
-                                              ),
-                                              color: context.read<AirportViewModel>().isPressed == true
-                                                  ? Colors.yellow
-                                                  : Colors.black,
-                                              onPressed: () {
-                                                //todo: fav 
-                                                context.read<AirportViewModel>().onPressed();
+
+                                            StarButton(
+                                              iconSize: 36,
+                                              iconColor:Colors.yellow, 
+                                              isStarred: false,
+                                              valueChanged: (_isFavorite) {
+                                                print('Is Favorite $_isFavorite)');
                                               },
-                                            ),
+                                            )
+                                            // IconButton(
+                                            //   icon: Icon(
+                                            //     Icons.star,
+                                            //   ),
+                                            //   color: context.read<AirportViewModel>().isPressed == true
+                                            //       ? Colors.yellow
+                                            //       : Colors.black,
+                                            //   onPressed: () {
+                                            //     //todo: fav
+                                            //     context.read<AirportViewModel>().onPressed();
+
+                                            //   },
+                                            // ),
                                           ],
                                         ),
                                       ),
@@ -266,6 +284,7 @@ class FligthScreen extends StatelessWidget {
           ],
         ),
       );
+
   _launchURL(String url) async {
     try {
       if (await canLaunch(url)) {

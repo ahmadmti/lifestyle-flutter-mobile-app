@@ -74,7 +74,6 @@ class _MedicineReminderState extends State<MedicineReminder> {
 class TopContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final GlobalBloc globalBloc = Provider.of<GlobalBloc>(context);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -126,10 +125,7 @@ class BottomContainer extends StatelessWidget {
               child: Text(
                 "Add Reminder",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 24, color: Colors.blue, fontWeight: FontWeight.bold),
               ),
             ),
           );
@@ -138,11 +134,10 @@ class BottomContainer extends StatelessWidget {
             color: Colors.white,
             child: GridView.builder(
               padding: EdgeInsets.only(top: 12),
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
-                return MedicineCard(snapshot.data[index]);
+                return MedicineCard(snapshot.data[index], _globalBloc);
               },
             ),
           );
@@ -154,10 +149,10 @@ class BottomContainer extends StatelessWidget {
 
 class MedicineCard extends StatelessWidget {
   final Medicine medicine;
+  final GlobalBloc globalBloc;
+  MedicineCard(this.medicine, this.globalBloc);
 
-  MedicineCard(this.medicine);
-
- /* Hero makeIcon(double size) {
+  /* Hero makeIcon(double size) {
     if (medicine.medicineType == "Pill") {
       return Hero(
         tag: medicine.medicineName + medicine.medicineType,
@@ -194,11 +189,11 @@ class MedicineCard extends StatelessWidget {
       child: InkWell(
         highlightColor: Colors.white,
         splashColor: Colors.grey,
+        onLongPress: () => _showAlertDialog(context, medicine, globalBloc),
         onTap: () {
           Navigator.of(context).push(
             PageRouteBuilder<Null>(
-              pageBuilder: (BuildContext context, Animation<double> animation,
-                  Animation<double> secondaryAnimation) {
+              pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
                 return AnimatedBuilder(
                     animation: animation,
                     builder: (BuildContext context, Widget child) {
@@ -221,17 +216,14 @@ class MedicineCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-               // makeIcon(50.0),
+                // makeIcon(50.0),
                 Hero(
                   tag: medicine.medicineName,
                   child: Material(
                     color: Colors.transparent,
                     child: Text(
                       medicine.medicineName,
-                      style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.blue,
-                          fontWeight: FontWeight.w500),
+                      style: TextStyle(fontSize: 22, color: Colors.blue, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ),
@@ -239,10 +231,7 @@ class MedicineCard extends StatelessWidget {
                   medicine.interval == 1
                       ? "Every " + medicine.interval.toString() + " hour"
                       : "Every " + medicine.interval.toString() + " hours",
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFFC9C9C9),
-                      fontWeight: FontWeight.w400),
+                  style: TextStyle(fontSize: 16, color: Color(0xFFC9C9C9), fontWeight: FontWeight.w400),
                 )
               ],
             ),
@@ -251,4 +240,27 @@ class MedicineCard extends StatelessWidget {
       ),
     );
   }
+
+  _showAlertDialog(BuildContext context,Medicine medicine, GlobalBloc globalBloc) => showDialog(
+        useRootNavigator: false,
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text("${medicine.medicineName??''}"),
+          actions: [
+            FlatButton(
+                onPressed: () {
+                  globalBloc.removeMedicine(medicine).then((value) {
+                    Navigator.of(context).pop();
+                    
+                  });
+                },
+                child: Text("Delete", style: TextStyle(color: Colors.redAccent))),
+            FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Edit")),
+          ],
+        ),
+      );
 }
