@@ -8,26 +8,22 @@ class GlobalBloc {
   BehaviorSubject<List<Medicine>> _medicineList$;
   BehaviorSubject<List<Medicine>> get medicineList$ => _medicineList$;
 
-
   GlobalBloc() {
     _medicineList$ = BehaviorSubject<List<Medicine>>.seeded([]);
     makeMedicineList();
   }
 
   Future removeMedicine(Medicine tobeRemoved) async {
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
     SharedPreferences sharedUser = await SharedPreferences.getInstance();
     List<String> medicineJsonList = [];
 
     var blocList = _medicineList$.value;
-    blocList.removeWhere(
-        (medicine) => medicine.medicineName == tobeRemoved.medicineName);
+    blocList.removeWhere((medicine) => medicine.medicineName == tobeRemoved.medicineName);
 
     for (int i = 0; i < (24 / tobeRemoved.interval).floor(); i++) {
-      flutterLocalNotificationsPlugin
-          .cancel(int.parse(tobeRemoved.notificationIDs[i]));
+      flutterLocalNotificationsPlugin.cancel(int.parse(tobeRemoved.notificationIDs[i]));
     }
     if (blocList.length != 0) {
       for (var blocMedicine in blocList) {
@@ -39,9 +35,16 @@ class GlobalBloc {
     _medicineList$.add(blocList);
   }
 
-  Future updateMedicineList(Medicine newMedicine) async {
+  Future updateMedicineList(Medicine newMedicine, index) async {
     var blocList = _medicineList$.value;
-    blocList.add(newMedicine);
+
+    if (index != -1) {
+      blocList.removeAt(index);
+      blocList.insert(index, newMedicine);
+    } else {
+      blocList.add(newMedicine);
+    }
+    
     _medicineList$.add(blocList);
     Map<String, dynamic> tempMap = newMedicine.toJson();
     SharedPreferences sharedUser = await SharedPreferences.getInstance();

@@ -166,7 +166,8 @@ class _NewEntryBirthdayState extends State<NewEntryBirthday> {
                     shape: StadiumBorder(),
                     child: Center(
                       child: Text(
-                        "Add Birthday",
+                         (widget.index == -1) ? 
+                        "Add Birthday": "Update Birthday",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -377,7 +378,6 @@ class _IntervalSelectionState extends State<IntervalSelection> {
   void initState() {
     super.initState();
     if (widget.birthday != null) {
-      print("interval: ${widget.birthday.interval}");
       _selected = widget.birthday.interval;
     }
   }

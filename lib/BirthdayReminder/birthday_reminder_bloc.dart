@@ -46,7 +46,6 @@ class GlobalBlocBirthday {
     }
     else blocList.add(newBirthday);
     
-    Fluttertoast.showToast(msg: "blocList: ${blocList.length}");
 
     _birthdayList$.add(blocList);
 

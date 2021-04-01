@@ -21,6 +21,7 @@ class _MedicineReminderState extends State<MedicineReminder> {
   void initState() {
     super.initState();
   }
+
   Widget _child;
 
   @override
@@ -74,23 +75,22 @@ class _MedicineReminderState extends State<MedicineReminder> {
           ],
         ),
       ),
-
       bottomNavigationBar: FluidNavBar(
-          icons: [
-            FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
-            FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
-            FluidNavBarIcon(
-                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
-          ],
-          onChange: _handleNavigationChange,
-          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
-          scaleFactor: 1.5,
-          defaultIndex: 1,
-          itemBuilder: (icon, item) => Semantics(
-            label: icon.extras["label"],
-            child: item,
-          ),
+        icons: [
+          FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+          FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+          FluidNavBarIcon(
+              icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
+        ],
+        onChange: _handleNavigationChange,
+        style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+        scaleFactor: 1.5,
+        defaultIndex: 1,
+        itemBuilder: (icon, item) => Semantics(
+          label: icon.extras["label"],
+          child: item,
         ),
+      ),
     );
   }
 
@@ -98,21 +98,21 @@ class _MedicineReminderState extends State<MedicineReminder> {
     setState(() {
       switch (index) {
         case 0:
-        _child = settings();
-        Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          _child = settings();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 0)), (Route<dynamic> route) => false);
           break;
 
         case 1:
-         _child = Home();
+          _child = Home();
           Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+              MaterialPageRoute(builder: (context) => mainHome(index: 1)), (Route<dynamic> route) => false);
           break;
 
         case 2:
-       _child = userAccount();
-Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          _child = userAccount();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 2)), (Route<dynamic> route) => false);
           break;
       }
       _child = AnimatedSwitcher(
@@ -191,7 +191,7 @@ class BottomContainer extends StatelessWidget {
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
-                return MedicineCard(snapshot.data[index], _globalBloc);
+                return MedicineCard(snapshot.data[index], _globalBloc, index);
               },
             ),
           );
@@ -204,7 +204,8 @@ class BottomContainer extends StatelessWidget {
 class MedicineCard extends StatelessWidget {
   final Medicine medicine;
   final GlobalBloc globalBloc;
-  MedicineCard(this.medicine, this.globalBloc);
+  final index;
+  MedicineCard(this.medicine, this.globalBloc, this.index);
 
   /* Hero makeIcon(double size) {
     if (medicine.medicineType == "Pill") {
@@ -243,7 +244,7 @@ class MedicineCard extends StatelessWidget {
       child: InkWell(
         highlightColor: Colors.white,
         splashColor: Colors.grey,
-        onLongPress: () => _showAlertDialog(context, medicine, globalBloc),
+        onLongPress: () => _showAlertDialog(context, medicine, globalBloc, index),
         onTap: () {
           Navigator.of(context).push(
             PageRouteBuilder<Null>(
@@ -295,25 +296,28 @@ class MedicineCard extends StatelessWidget {
     );
   }
 
-  _showAlertDialog(BuildContext context,Medicine medicine, GlobalBloc globalBloc) => showDialog(
+  _showAlertDialog(BuildContext context, Medicine medicine, GlobalBloc globalBloc, index) => showDialog(
         useRootNavigator: false,
         context: context,
         builder: (_) => AlertDialog(
-          title: Text("${medicine.medicineName??''}"),
+          title: Text("${medicine.medicineName ?? ''}"),
           actions: [
             FlatButton(
                 onPressed: () {
                   globalBloc.removeMedicine(medicine).then((value) {
                     Navigator.of(context).pop();
-                    
                   });
                 },
                 child: Text("Delete", style: TextStyle(color: Colors.redAccent))),
             FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-
-                  
+                   Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NewEntry(medicine: medicine, index: index),
+                ),
+              );
                 },
                 child: Text("Edit")),
           ],

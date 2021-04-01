@@ -19,6 +19,10 @@ import '../../../../settings.dart';
 import '../../../../userAccount.dart';
 
 class NewEntry extends StatefulWidget {
+  final Medicine medicine;
+  final int index;
+  NewEntry({this.medicine, this.index = -1});
+
   @override
   _NewEntryState createState() => _NewEntryState();
 }
@@ -42,12 +46,14 @@ class _NewEntryState extends State<NewEntry> {
   void initState() {
     super.initState();
     _newEntryBloc = NewEntryBloc();
-    nameController = TextEditingController();
-    dosageController = TextEditingController();
+    nameController = TextEditingController(text: widget.medicine != null ? widget.medicine.medicineName : '');
+    dosageController = TextEditingController(text: widget.medicine != null ? widget.medicine.dosage.toString() : '');
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     _scaffoldKey = GlobalKey<ScaffoldState>();
 
     initializeErrorListen();
+
+    print("ty ${widget.medicine.medicineType??''}");
   }
 
   @override
@@ -134,15 +140,28 @@ class _NewEntryState extends State<NewEntry> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         MedicineTypeColumn(
-                            type: MedicineType.Pill,
-                            name: "Pill",
-                            iconValue: 0xe901,
-                            isSelected: snapshot.data == MedicineType.Pill ? true : false),
+                          type: MedicineType.Pill,
+                          name: "Pill",
+                          iconValue: 0xe901,
+                          isSelected: widget.medicine == null
+                              ? snapshot.data == MedicineType.Pill
+                                  ? true
+                                  : false
+                              : widget.medicine.medicineType == "Pill"
+                                  ? true
+                                  : false,
+                        ),
                         MedicineTypeColumn(
                             type: MedicineType.Syringe,
                             name: "Syringe",
                             iconValue: 0xe902,
-                            isSelected: snapshot.data == MedicineType.Syringe ? true : false),
+                            isSelected: widget.medicine == null
+                                ? snapshot.data == MedicineType.Syringe
+                                    ? true
+                                    : false
+                                : widget.medicine.medicineType.toString() == "Syringe"
+                                    ? true
+                                    : false),
                       ],
                     );
                   },
@@ -159,7 +178,7 @@ class _NewEntryState extends State<NewEntry> {
                 height: 20,
               ),
               //ScheduleCheckBoxes(),
-              IntervalSelection(),
+              IntervalSelection(medicine: widget.medicine != null ? widget.medicine : null),
               SizedBox(
                 height: 20,
               ),
@@ -167,7 +186,7 @@ class _NewEntryState extends State<NewEntry> {
                 title: "Starting Time",
                 isRequired: true,
               ),
-              SelectTime(),
+              SelectTime(medicine: widget.medicine != null ? widget.medicine : null),
               SizedBox(
                 height: 50,
               ),
@@ -180,7 +199,7 @@ class _NewEntryState extends State<NewEntry> {
                     shape: StadiumBorder(),
                     child: Center(
                       child: Text(
-                        "Add Medicine",
+                        (widget.index == -1) ? "Add Medicine" : "Update Medicine",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -244,7 +263,7 @@ class _NewEntryState extends State<NewEntry> {
                       });
 
                       Timer(Duration(seconds: 1), () {
-                        if (medicineName == name) {
+                        if (widget.index == -1 && medicineName == name) {
                           _newEntryBloc.submitError(EntryError.NameDuplicate);
                           return;
                         }
@@ -271,7 +290,7 @@ class _NewEntryState extends State<NewEntry> {
                           startTime: startTime,
                         );
 
-                        _globalBloc.updateMedicineList(newEntryMedicine);
+                        _globalBloc.updateMedicineList(newEntryMedicine, widget.index);
 
                         Navigator.pushReplacement(
                           context,
@@ -293,47 +312,44 @@ class _NewEntryState extends State<NewEntry> {
           ),
         ),
       ),
-
       bottomNavigationBar: FluidNavBar(
-          icons: [
-            FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
-            FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
-            FluidNavBarIcon(
-                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
-          ],
-          onChange: _handleNavigationChange,
-          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
-          scaleFactor: 1.5,
-          defaultIndex: 1,
-          itemBuilder: (icon, item) => Semantics(
-            label: icon.extras["label"],
-            child: item,
-          ),
+        icons: [
+          FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+          FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+          FluidNavBarIcon(
+              icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
+        ],
+        onChange: _handleNavigationChange,
+        style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+        scaleFactor: 1.5,
+        defaultIndex: 1,
+        itemBuilder: (icon, item) => Semantics(
+          label: icon.extras["label"],
+          child: item,
         ),
+      ),
     );
-
-  
   }
 
   void _handleNavigationChange(int index) {
     setState(() {
       switch (index) {
         case 0:
-        _child = settings();
-        Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          _child = settings();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 0)), (Route<dynamic> route) => false);
           break;
 
         case 1:
-         _child = Home();
+          _child = Home();
           Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+              MaterialPageRoute(builder: (context) => mainHome(index: 1)), (Route<dynamic> route) => false);
           break;
 
         case 2:
-       _child = userAccount();
-Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          _child = userAccount();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 2)), (Route<dynamic> route) => false);
           break;
       }
       _child = AnimatedSwitcher(
@@ -344,6 +360,7 @@ Navigator.of(context).pushAndRemoveUntil(
       );
     });
   }
+
   void initializeErrorListen() {
     _newEntryBloc.errorState$.listen(
       (EntryError error) {
@@ -390,6 +407,9 @@ Navigator.of(context).pushAndRemoveUntil(
 }
 
 class IntervalSelection extends StatefulWidget {
+  final Medicine medicine;
+  IntervalSelection({this.medicine});
+
   @override
   _IntervalSelectionState createState() => _IntervalSelectionState();
 }
@@ -405,8 +425,21 @@ class _IntervalSelectionState extends State<IntervalSelection> {
   var _selected = 0;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.medicine != null) {
+      _selected = widget.medicine.interval;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final NewEntryBloc _newEntryBloc = Provider.of<NewEntryBloc>(context);
+
+    if (widget.medicine != null) {
+      _newEntryBloc.updateInterval(_selected);
+    }
+
     return Padding(
       padding: EdgeInsets.only(top: 8.0),
       child: Container(
@@ -462,6 +495,9 @@ class _IntervalSelectionState extends State<IntervalSelection> {
 }
 
 class SelectTime extends StatefulWidget {
+  final Medicine medicine;
+  SelectTime({this.medicine});
+
   @override
   _SelectTimeState createState() => _SelectTimeState();
 }
@@ -498,6 +534,7 @@ class _SelectTimeState extends State<SelectTime> {
   @override
   Widget build(BuildContext context) {
     _newEntryBloc = Provider.of<NewEntryBloc>(context);
+    if ((widget.medicine != null)) _newEntryBloc.updateTime(widget.medicine.startTime);
 
     return Container(
       height: 60,
@@ -525,9 +562,13 @@ class _SelectTimeState extends State<SelectTime> {
           },
           child: Center(
             child: Text(
-              _clicked == false
-                  ? "Pick Time"
-                  : "${convertTime(_time.hour.toString())}:${convertTime(_time.minute.toString())}",
+              (widget.medicine == null)
+                  ? _clicked == false
+                      ? "Pick Time"
+                      : "${convertTime(_time.hour.toString())}:${convertTime(_time.minute.toString())}"
+                  : (widget.medicine.startTime.toString().substring(0, 2) +
+                      ":" +
+                      widget.medicine.startTime.toString().substring(2, 4)),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,
