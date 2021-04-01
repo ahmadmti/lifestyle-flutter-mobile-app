@@ -14,6 +14,7 @@ import '../home.dart';
 import '../mainHome.dart';
 import '../settings.dart';
 import '../userAccount.dart';
+import 'chart_budget.dart';
 
 class addBudget extends StatefulWidget {
   @override
@@ -24,7 +25,7 @@ class addBudgetState extends State<addBudget> {
   final List<mTransaction> _userTransactions = [];
   bool _showChart = false;
   final FirebaseFirestore db = FirebaseFirestore.instance;
-    var firebaseUser = FirebaseAuth.instance.currentUser;
+  var firebaseUser = FirebaseAuth.instance.currentUser;
   Widget _child;
 
   List<mTransaction> get _recentTransactions {
@@ -37,7 +38,8 @@ class addBudgetState extends State<addBudget> {
     }).toList();
   }
 
-  void _addNewTransaction(String txTitle, double txAmount, DateTime chosenDate) {
+  void _addNewTransaction(String txTitle, double txAmount, String selectedCat) {
+    DateTime chosenDate = DateTime.now();
     //insert into DB
     String transId = DateTime.now().millisecondsSinceEpoch.toString();
     db.collection("transactions").doc(firebaseUser.uid).collection("budget").doc(transId).set({
@@ -45,26 +47,40 @@ class addBudgetState extends State<addBudget> {
       "title": txTitle,
       "amount": txAmount,
       "date": chosenDate,
+      "category": selectedCat,
     }).then((_) {
-      Fluttertoast.showToast(
-          msg: "Transaction Added Successfully",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+       Fluttertoast.showToast(
+            msg: "Transaction Added Successfully",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
 
-      final newTx = mTransaction(
-        title: txTitle,
-        amount: txAmount,
-        date: chosenDate,
-        id: DateTime.now().toString(),
-      );
+        final newTx = mTransaction(
+          title: txTitle,
+          amount: txAmount,
+          date: chosenDate,
+          id: DateTime.now().toString(),
+          category: selectedCat,
+        );
 
-      setState(() {
-        _userTransactions.add(newTx);
-      });
+        setState(() {
+          _userTransactions.add(newTx);
+        });
+
+      // db.collection("transactions").doc(firebaseUser.uid).collection("expenses").get().then((QuerySnapshot snapshot) {
+      //   snapshot.docs.forEach((element) {
+      //     if (selectedCat == element['category']) {
+      //       db.collection("transactions").doc(firebaseUser.uid).collection("budget").doc(element['id']).set({
+      //         "total_budget": (element['total_budget'] + txAmount),
+      //       });
+      //     }
+      //   });
+      // }).then((value) {
+       
+      // });
     });
   }
 
@@ -165,14 +181,14 @@ class addBudgetState extends State<addBudget> {
             if (!isLandscape)
               Container(
                 height: (mediaQuery.size.height - appBar.preferredSize.height - mediaQuery.padding.top) * 0.3,
-                child: Chart(_recentTransactions),
+                child: ChartBudget(_recentTransactions),
               ),
             if (!isLandscape) txListWidget,
             if (isLandscape)
               _showChart
                   ? Container(
                       height: (mediaQuery.size.height - appBar.preferredSize.height - mediaQuery.padding.top) * 0.7,
-                      child: Chart(_recentTransactions),
+                      child: ChartBudget(_recentTransactions),
                     )
                   : txListWidget
           ],
@@ -194,44 +210,47 @@ class addBudgetState extends State<addBudget> {
                     child: Icon(Icons.add),
                     onPressed: () => _startAddNewTransaction(context),
                   ),
-                  bottomNavigationBar: FluidNavBar(
-          icons: [
-            FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
-            FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
-            FluidNavBarIcon(
-                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
-          ],
-          onChange: _handleNavigationChange,
-          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
-          scaleFactor: 1.5,
-          defaultIndex: 1,
-          itemBuilder: (icon, item) => Semantics(
-            label: icon.extras["label"],
-            child: item,
-          ),
-        ),
+            bottomNavigationBar: FluidNavBar(
+              icons: [
+                FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+                FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+                FluidNavBarIcon(
+                    icon: Icons.supervised_user_circle_outlined,
+                    backgroundColor: Colors.blue,
+                    extras: {"label": "account"})
+              ],
+              onChange: _handleNavigationChange,
+              style:
+                  FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+              scaleFactor: 1.5,
+              defaultIndex: 1,
+              itemBuilder: (icon, item) => Semantics(
+                label: icon.extras["label"],
+                child: item,
+              ),
+            ),
           );
   }
 
-void _handleNavigationChange(int index) {
+  void _handleNavigationChange(int index) {
     setState(() {
       switch (index) {
         case 0:
-        _child = settings();
-        Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          _child = settings();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 0)), (Route<dynamic> route) => false);
           break;
 
         case 1:
-         _child = Home();
+          _child = Home();
           Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+              MaterialPageRoute(builder: (context) => mainHome(index: 1)), (Route<dynamic> route) => false);
           break;
 
         case 2:
-       _child = userAccount();
-Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          _child = userAccount();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 2)), (Route<dynamic> route) => false);
           break;
       }
       _child = AnimatedSwitcher(
@@ -242,14 +261,19 @@ Navigator.of(context).pushAndRemoveUntil(
       );
     });
   }
-  
+
   fetchBudget() {
     db.collection("transactions").doc(firebaseUser.uid).collection("budget").get().then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((element) {
         var date = DateTime.parse(element['date'].toDate().toString());
 
-        _userTransactions
-            .add(mTransaction(id: element['id'], title: element['title'], amount: element['amount'], date: date));
+        _userTransactions.add(mTransaction(
+          id: element['id'],
+          title: element['title'],
+          amount: element['amount'],
+          date: date,
+          category: element['category'],
+        ));
         print("doc: ${element['amount']}");
       });
     }).then((value) => setState(() {}));

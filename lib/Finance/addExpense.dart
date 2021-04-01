@@ -23,7 +23,7 @@ class addExpense extends StatefulWidget {
 class addExpenseState extends State<addExpense> {
   final FirebaseFirestore db = FirebaseFirestore.instance;
   Widget _child;
-
+  var totalBudget;
   final List<mTransaction> _userTransactions = [];
   bool _showChart = false;
   var firebaseUser = FirebaseAuth.instance.currentUser;
@@ -38,34 +38,47 @@ class addExpenseState extends State<addExpense> {
     }).toList();
   }
 
-  void _addNewTransaction(String txTitle, double txAmount, DateTime chosenDate) {
+  void _addNewTransaction(String txTitle, double txAmount, String selectedCat) {
+    DateTime chosenDate = DateTime.now();
+    totalBudget = 0.0; //set 0 before adding
     //insert into DB
     String transId = DateTime.now().millisecondsSinceEpoch.toString();
-    db.collection("transactions").doc(firebaseUser.uid).collection("expenses").doc(transId).set({
-      "id": transId,
-      "title": txTitle,
-      "amount": txAmount,
-      "date": chosenDate,
-    }).then((_) {
-      Fluttertoast.showToast(
-          msg: "Transaction Added Successfully",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+    db.collection("transactions").doc(firebaseUser.uid).collection("budget").get().then((QuerySnapshot snapshot) {
+      snapshot.docs.forEach((element) {
+        if (selectedCat == element['category']) totalBudget += element['amount'];
 
-      final newTx = mTransaction(
-        title: txTitle,
-        amount: txAmount,
-        date: chosenDate,
-        id: DateTime.now().toString(),
-      );
+        print("totalBudget: $totalBudget");
+      });
+    }).then((value) {
+      db.collection("transactions").doc(firebaseUser.uid).collection("expenses").doc(transId).set({
+        "id": transId,
+        "title": txTitle,
+        "amount": txAmount,
+        "date": chosenDate,
+        "category": selectedCat,
+        "total_budget": totalBudget,
+      }).then((_) {
+        Fluttertoast.showToast(
+            msg: "Transaction Added Successfully",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
 
-      setState(() {
-        //locally
-        _userTransactions.add(newTx);
+        final newTx = mTransaction(
+            title: txTitle,
+            amount: txAmount,
+            date: chosenDate,
+            id: DateTime.now().toString(),
+            category: selectedCat,
+            totalBudget: totalBudget);
+
+        setState(() {
+          //locally
+          _userTransactions.add(newTx);
+        });
       });
     });
   }
@@ -223,25 +236,25 @@ class addExpenseState extends State<addExpense> {
           );
   }
 
-void _handleNavigationChange(int index) {
+  void _handleNavigationChange(int index) {
     setState(() {
       switch (index) {
         case 0:
-        _child = settings();
-        Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          _child = settings();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 0)), (Route<dynamic> route) => false);
           break;
 
         case 1:
-         _child = Home();
+          _child = Home();
           Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+              MaterialPageRoute(builder: (context) => mainHome(index: 1)), (Route<dynamic> route) => false);
           break;
 
         case 2:
-       _child = userAccount();
-Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          _child = userAccount();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 2)), (Route<dynamic> route) => false);
           break;
       }
       _child = AnimatedSwitcher(
@@ -252,14 +265,20 @@ Navigator.of(context).pushAndRemoveUntil(
       );
     });
   }
+
   fetchExpenses() {
     db.collection("transactions").doc(firebaseUser.uid).collection("expenses").get().then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((element) {
         var date = DateTime.parse(element['date'].toDate().toString());
 
-        _userTransactions
-            .add(mTransaction(id: element['id'], title: element['title'], amount: element['amount'], date: date));
-        print("doc: ${element['amount']}");
+        _userTransactions.add(mTransaction(
+          id: element['id'],
+          title: element['title'],
+          amount: element['amount'],
+          date: date,
+          category: element['category'],
+          totalBudget: double.parse(element['total_budget'].toStringAsFixed(0))
+        ));
       });
     }).then((value) => setState(() {}));
   }

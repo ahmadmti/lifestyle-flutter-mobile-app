@@ -24,7 +24,7 @@ class addIncomeState extends State<addIncome> {
   final List<mTransaction> _userTransactions = [];
   bool _showChart = false;
   final FirebaseFirestore db = FirebaseFirestore.instance;
-    var firebaseUser = FirebaseAuth.instance.currentUser;
+  var firebaseUser = FirebaseAuth.instance.currentUser;
   Widget _child;
 
   List<mTransaction> get _recentTransactions {
@@ -37,7 +37,8 @@ class addIncomeState extends State<addIncome> {
     }).toList();
   }
 
-  void _addNewTransaction(String txTitle, double txAmount, DateTime chosenDate) {
+  void _addNewTransaction(String txTitle, double txAmount, String selectedCat) {
+  DateTime   chosenDate=DateTime.now();
     //insert into DB
     String transId = DateTime.now().millisecondsSinceEpoch.toString();
     db.collection("transactions").doc(firebaseUser.uid).collection("income").doc(transId).set({
@@ -45,6 +46,8 @@ class addIncomeState extends State<addIncome> {
       "title": txTitle,
       "amount": txAmount,
       "date": chosenDate,
+            "category": selectedCat,
+
     }).then((_) {
       Fluttertoast.showToast(
           msg: "Transaction Added Successfully",
@@ -60,6 +63,7 @@ class addIncomeState extends State<addIncome> {
         amount: txAmount,
         date: chosenDate,
         id: DateTime.now().toString(),
+        category: selectedCat,
       );
 
       setState(() {
@@ -194,44 +198,47 @@ class addIncomeState extends State<addIncome> {
                     child: Icon(Icons.add),
                     onPressed: () => _startAddNewTransaction(context),
                   ),
-                  bottomNavigationBar: FluidNavBar(
-          icons: [
-            FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
-            FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
-            FluidNavBarIcon(
-                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
-          ],
-          onChange: _handleNavigationChange,
-          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
-          scaleFactor: 1.5,
-          defaultIndex: 1,
-          itemBuilder: (icon, item) => Semantics(
-            label: icon.extras["label"],
-            child: item,
-          ),
-        ),
+            bottomNavigationBar: FluidNavBar(
+              icons: [
+                FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+                FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+                FluidNavBarIcon(
+                    icon: Icons.supervised_user_circle_outlined,
+                    backgroundColor: Colors.blue,
+                    extras: {"label": "account"})
+              ],
+              onChange: _handleNavigationChange,
+              style:
+                  FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+              scaleFactor: 1.5,
+              defaultIndex: 1,
+              itemBuilder: (icon, item) => Semantics(
+                label: icon.extras["label"],
+                child: item,
+              ),
+            ),
           );
   }
 
-void _handleNavigationChange(int index) {
+  void _handleNavigationChange(int index) {
     setState(() {
       switch (index) {
         case 0:
-        _child = settings();
-        Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          _child = settings();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 0)), (Route<dynamic> route) => false);
           break;
 
         case 1:
-         _child = Home();
+          _child = Home();
           Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+              MaterialPageRoute(builder: (context) => mainHome(index: 1)), (Route<dynamic> route) => false);
           break;
 
         case 2:
-       _child = userAccount();
-Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          _child = userAccount();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 2)), (Route<dynamic> route) => false);
           break;
       }
       _child = AnimatedSwitcher(
@@ -242,13 +249,19 @@ Navigator.of(context).pushAndRemoveUntil(
       );
     });
   }
+
   fetchIncome() {
     db.collection("transactions").doc(firebaseUser.uid).collection("income").get().then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((element) {
         var date = DateTime.parse(element['date'].toDate().toString());
 
-        _userTransactions
-            .add(mTransaction(id: element['id'], title: element['title'], amount: element['amount'], date: date));
+        _userTransactions.add(mTransaction(
+          id: element['id'],
+          title: element['title'],
+          amount: element['amount'],
+          date: date,
+          category: element['category'],
+        ));
         print("doc: ${element['amount']}");
       });
     }).then((value) => setState(() {}));

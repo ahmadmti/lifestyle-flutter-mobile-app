@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lifestyle/Finance/widgetsExpense/chart_bar.dart';
 import 'package:lifestyle/Finance/widgetsIncome/new_transaction.dart';
 
-import './chart_bar.dart';
 import 'package:lifestyle/Finance/models/transaction.dart';
 
-class Chart extends StatelessWidget {
+class ChartBudget extends StatelessWidget {
   final List<mTransaction> recentTransactions;
 
-  Chart(this.recentTransactions);
+  ChartBudget(this.recentTransactions);
 
   List<Map<String, Object>> get groupedTransactionValues {
     return List.generate(4, (index) {
@@ -58,7 +58,9 @@ class Chart extends StatelessWidget {
               child: ChartBar(
                 data['cat'],
                 data['amount'],
-                totalSpending == 0.0 ? 0.0 : (data['amount'] as double) / totalSpending,
+                // totalSpending == 0.0 ? 0.0 : (data['amount'] as double) / totalSpending,
+                data['amount'] == 0.0 ? 0.0 : 1.0,
+                
                 
               ),
             );
