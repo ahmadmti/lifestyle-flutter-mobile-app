@@ -11,6 +11,7 @@ import 'package:lifestyle/Travel/view_model/calendar_view_model.dart';
 import 'package:lifestyle/Travel/view_model/passenger_list_view_model.dart';
 import 'package:lifestyle/Travel/view_model/search_view_model.dart';
 import 'package:lifestyle/Travel/widget/flights_screen.dart';
+import '../../home.dart';
 import '../../main.dart';
 import '../../mainHome.dart';
 import 'departure_calendar_screen.dart';
@@ -33,6 +34,7 @@ class _MyFlightInfoFieldState extends State<MyFlightInfoField> {
   String n = '';
   @override
   void initState() {
+    // TODO: implement initState
     _child = mainHome();
     getData();
     super.initState();
@@ -53,30 +55,7 @@ class _MyFlightInfoFieldState extends State<MyFlightInfoField> {
     return name;
   }
 
-  void _handleNavigationChange(int index) {
-    setState(() {
-      switch (index) {
-        case 0:
-          _child = settings();
-
-          break;
-        case 1:
-          _child = mainHome();
-
-          break;
-        case 2:
-          _child = userAccount();
-
-          break;
-      }
-      _child = AnimatedSwitcher(
-        switchInCurve: Curves.easeOut,
-        switchOutCurve: Curves.easeIn,
-        duration: Duration(milliseconds: 500),
-        child: _child,
-      );
-    });
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -84,47 +63,82 @@ class _MyFlightInfoFieldState extends State<MyFlightInfoField> {
       appBar: AppBar(
         title: Padding(
           padding: const EdgeInsets.all(5.0),
-          child: Text("OneStop Travel"),
+          child: Text("OneStop"),
         ),
       ),
       
       body: Container(
-        padding: EdgeInsets.only(top: 0, left: 20, right: 20, bottom: 10),
-        child: ListView(
-          children: [
-            // MyAppBar(),
-            _departureNReturn(context),
-            _selectDate(context),
-            _divider(context),
-            _fromTo(context),
-            _displayAirports(context),
-            Divider(
-              thickness: 1,
-              color: Colors.blue,
-            ),
-            _selectPassenger(context),
-            _searchButton(context)
-          ],
-        ),
-      ),
-     bottomNavigationBar: FluidNavBar(
-          icons: [
-            FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
-            FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
-            FluidNavBarIcon(
-                icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
-          ],
-          onChange: _handleNavigationChange,
-          style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
-          scaleFactor: 1.5,
-          defaultIndex: 1,
-          itemBuilder: (icon, item) => Semantics(
-            label: icon.extras["label"],
-            child: item,
+        padding: EdgeInsets.all(20),
+        child: Expanded(
+          child: Column(
+            children: [
+              MyAppBar(),
+              _departureNReturn(context),
+              _selectDate(context),
+              _divider(context),
+              _fromTo(context),
+              _displayAirports(context),
+              Divider(
+                thickness: 1,
+                color: Colors.blue,
+              ),
+              _selectPassenger(context),
+              _searchButton(context)
+            ],
           ),
         ),
+      ),
+      // bottomNavigationBar: FluidNavBar(
+      //     icons: [
+      //       FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
+      //       FluidNavBarIcon(icon: Icons.home, backgroundColor: Colors.blue, extras: {"label": "home"}),
+      //       FluidNavBarIcon(
+      //           icon: Icons.supervised_user_circle_outlined, backgroundColor: Colors.blue, extras: {"label": "account"})
+      //     ],
+      //     onChange: _handleNavigationChange,
+      //     style: FluidNavBarStyle(iconUnselectedForegroundColor: Colors.white, barBackgroundColor: Colors.grey[200]),
+      //     scaleFactor: 1.5,
+      //     defaultIndex: 1,
+      //     itemBuilder: (icon, item) => Semantics(
+      //       label: icon.extras["label"],
+      //       child: item,
+      //     ),
+      //   ),
     );
+
+    
   }
+
+
+// void _handleNavigationChange(int index) {
+//     setState(() {
+//       switch (index) {
+//         case 0:
+//         _child = settings();
+//         Navigator.of(context).pushAndRemoveUntil(
+//                 MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+//           break;
+
+//         case 1:
+//          _child = Home();
+//           Navigator.of(context).pushAndRemoveUntil(
+//                 MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+//           break;
+
+//         case 2:
+//        _child = userAccount();
+// Navigator.of(context).pushAndRemoveUntil(
+//                 MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+//           break;
+//       }
+//       _child = AnimatedSwitcher(
+//         switchInCurve: Curves.easeOut,
+//         switchOutCurve: Curves.easeIn,
+//         duration: Duration(milliseconds: 500),
+//         child: _child,
+//       );
+//     });
+//   }
 
   Future<String> _getInboundAirport() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -164,13 +178,13 @@ class _MyFlightInfoFieldState extends State<MyFlightInfoField> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TextButton(
+              FlatButton(
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => DepartureCalendar()));
                 },
                 child: Text("Departure", style: TextStyle(color: Colors.blue)),
               ),
-              TextButton(
+              FlatButton(
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ReturnCalendar()));
                 },
@@ -212,133 +226,136 @@ class _MyFlightInfoFieldState extends State<MyFlightInfoField> {
         ),
       );
 
-  _divider(BuildContext context) => Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
-    Expanded(
-        child: Divider(
-      thickness: 1,
-      color: Colors.blue,
-    )),
-    Text("         "),
-    Expanded(
-        child: Divider(
-      thickness: 1,
-      color: Colors.blue,
-    )),
-  ]);
+  _divider(BuildContext context) => Expanded(
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
+          Expanded(
+              child: Divider(
+            thickness: 1,
+            color: Colors.blue,
+          )),
+          Text("         "),
+          Expanded(
+              child: Divider(
+            thickness: 1,
+            color: Colors.blue,
+          )),
+        ]),
+      );
 
-  _fromTo(BuildContext context) => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      TextButton(
-        onPressed: () {
-          showSearch(context: context, delegate: SearchAirports());
-        },
-        child: Text(
-          "From",
-          style: TextStyle(color: Colors.blue),
+  _fromTo(BuildContext context) => Expanded(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            FlatButton(
+              onPressed: () {
+                showSearch(context: context, delegate: SearchAirports());
+              },
+              child: Text(
+                "From",
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
+            FlatButton(
+              onPressed: () {
+                showSearch(context: context, delegate: SearchAirports());
+              },
+              child: Text("To", style: TextStyle(color: Colors.blue)),
+            ),
+          ],
         ),
-      ),
-      TextButton(
-        onPressed: () {
-          showSearch(context: context, delegate: SearchAirports());
-        },
-        child: Text("To", style: TextStyle(color: Colors.blue)),
-      ),
-    ],
-  );
+      );
 
-  _displayAirports(BuildContext context) => Row(
-    mainAxisAlignment: MainAxisAlignment.start,
-    children: [
-      Expanded(
-                    child: Consumer<SearchViewModel>(builder: (context, item, child) {
-          return TextButton(
-            onPressed: () {
-              item.searchNPrintResultInbound(
-                context,
+  _displayAirports(BuildContext context) => Expanded(
+        flex: 1,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Consumer<SearchViewModel>(builder: (context, item, child) {
+              return FlatButton(
+                onPressed: () {
+                  item.searchNPrintResultInbound(
+                    context,
+                  );
+                },
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: FutureBuilder<String>(
+                        future: _getInboundAirport(),
+                        builder: (BuildContext context, AsyncSnapshot snapshot) {
+                          return FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text(
+                              snapshot.data != null ? "${snapshot.data}" : "Select Airport",
+                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: FutureBuilder<String>(
+                        future: _getInboundCityName(),
+                        builder: (BuildContext context, AsyncSnapshot snapshot) {
+                          return FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text(
+                              snapshot.data != null ? "${snapshot.data}" : " ",
+                              style: TextStyle(fontSize: 35, fontWeight: FontWeight.w400),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               );
-            },
-            child: Column(
-              children: [
-                Expanded(
-                  child: FutureBuilder<String>(
-                    future: _getInboundAirport(),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      return FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Text(
-                          snapshot.data != null ? "${snapshot.data}" : "Select Airport",
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w400, color: Colors.black),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: FutureBuilder<String>(
-                    future: _getInboundCityName(),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      return FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Text(
-                          snapshot.data != null ? "${snapshot.data}" : "",
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w400, color: Colors.black),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+            }),
+            Icon(
+              Icons.flight,
+              color: Colors.blue,
             ),
-          );
-        }),
-      ),
-      Icon(
-        Icons.flight,
-        color: Colors.blue,
-      ),
-      Expanded(
-                    child: Consumer<SearchViewModel>(builder: (context, item, child) {
-          return FlatButton(
-            onPressed: () {
-              context.read<SearchViewModel>().searchNPrintResultOutbound(context);
-            },
-            child: Column(
-              children: [
-                Expanded(
-                  child: FutureBuilder<String>(
-                    future: _getOutboundAirport(),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      return FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          snapshot.data != null ? "${snapshot.data} " : "Select Airport",
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w400, color: Colors.black),
-                        ),
-                      );
-                    },
-                  ),
+            Consumer<SearchViewModel>(builder: (context, item, child) {
+              return FlatButton(
+                onPressed: () {
+                  context.read<SearchViewModel>().searchNPrintResultOutbound(context);
+                },
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: FutureBuilder<String>(
+                        future: _getOutboundAirport(),
+                        builder: (BuildContext context, AsyncSnapshot snapshot) {
+                          return FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              snapshot.data != null ? "${snapshot.data} " : "Select Airport",
+                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: FutureBuilder<String>(
+                        future: _getOutboundCityName(),
+                        builder: (BuildContext context, AsyncSnapshot snapshot) {
+                          return Container(
+                            child: Text(
+                              snapshot.data != null ? "${snapshot.data} " : "",
+                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: FutureBuilder<String>(
-                    future: _getOutboundCityName(),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      return Container(
-                        child: Text(
-                          snapshot.data != null ? "${snapshot.data} " : "",
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w400, color: Colors.black),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        }),
-      )
-    ],
-  );
+              );
+            })
+          ],
+        ),
+      );
 
   _selectPassenger(BuildContext context) => FlatButton(
       onPressed: () {
@@ -402,18 +419,17 @@ class _MyFlightInfoFieldState extends State<MyFlightInfoField> {
         ),
       ));
 
-  _searchButton(BuildContext context) => TextButton(
-      child: Text(
-        'SEARCH',
-
-        style: TextStyle(
-          color: Colors.blue,
-          fontSize: 20,
-              decoration: TextDecoration.underline,
-
-        ),
-      ),
-      onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => FligthScreen()));
-      });
+  _searchButton(BuildContext context) => Expanded(
+        child: TextButton(
+            child: Text(
+              'SEARCH',
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 20,
+              ),
+            ),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => FligthScreen()));
+            }),
+      );
 }

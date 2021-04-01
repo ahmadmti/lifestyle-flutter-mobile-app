@@ -80,6 +80,7 @@ class _TicketUploadScreenState extends State<TicketUploadScreen> {
     final appDir = await getApplicationDocumentsDirectory();
     final fileName = basename(imageFile.path);
     tmpFile = await tmpFile.copy('${appDir.path}/$fileName');
+    if(tmpFile.path!=null)
     _pathList.add(tmpFile.path);
 
     _setPathList(_pathList);
