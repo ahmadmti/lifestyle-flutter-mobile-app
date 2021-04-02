@@ -59,26 +59,8 @@ class welcomePageState extends State<welcomePage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 50.0,
-                        child: Icon(
-                          Icons.shopping_cart,
-                          color: Colors.greenAccent,
-                          size: 50.0,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10.0),
-                      ),
-                      Text(
-                        'Welcome to the \n OneStop Application',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24.0),
-                        textAlign: TextAlign.center,
-                      )
+                      Image.asset("assets/logo_splash.png", height: 150, width: 150,),
+                     
                     ],
                   ),
                 ),
