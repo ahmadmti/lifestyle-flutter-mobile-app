@@ -11,13 +11,14 @@ import 'package:lifestyle/FitnessPlan/pages/activity_detail.dart';
 
 import 'package:flutter/material.dart';
 
-class Programs extends StatelessWidget {
+class ProgramIntermediate extends StatelessWidget {
+  
   final List<Exercise> exercises = [
     Exercise(
       image: 'assets/images/image001.jpg',
       title: 'Easy Start',
       time: '8 min',
-      difficult: 'Beginner',
+      difficult: 'Intermediate',
     ),
     Exercise(
       image: 'assets/images/image002.jpg',
@@ -29,7 +30,7 @@ class Programs extends StatelessWidget {
       image: 'assets/images/image003.jpg',
       title: 'Pro Start',
       time: '25 min',
-      difficult: 'Expert ',
+      difficult: 'Intermediate ',
     )
   ];
 
@@ -72,14 +73,14 @@ class Programs extends StatelessWidget {
       body: SingleChildScrollView(
         child: SafeArea(
           child: Container(
-            padding: EdgeInsets.only(top: 20.0),
+            // padding: EdgeInsets.only(top: 20.0),
             child: Column(
               children: <Widget>[
-                Header(
-                  'Exercises',
-                  // rightSide: UserPhoto(),
-                ),
-                MainCardPrograms(), // MainCard
+                // Header(
+                //   'Exercises',
+                //   // rightSide: UserPhoto(),
+                // ),
+                // MainCardPrograms(), // MainCard
                 Section(
                   title: 'Fat burning',
                   horizontalList: this.generateList(context),

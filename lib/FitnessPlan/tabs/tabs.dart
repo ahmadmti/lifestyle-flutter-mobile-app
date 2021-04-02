@@ -1,13 +1,15 @@
 import 'package:fluid_bottom_nav_bar/fluid_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:lifestyle/FitnessPlan/tabs/Diet.dart';
-import 'package:lifestyle/FitnessPlan/tabs/Programs.dart';
+import 'package:lifestyle/FitnessPlan/tabs/ProgramBegineer.dart';
+import 'package:lifestyle/FitnessPlan/tabs/ProgramIntermediate.dart';
 import 'package:lifestyle/FitnessPlan/tabs/Results.dart';
 
 import '../../home.dart';
 import '../../mainHome.dart';
 import '../../settings.dart';
 import '../../userAccount.dart';
+import 'ProgramExpert.dart';
 
 class Tabs extends StatefulWidget {
   @override
@@ -15,33 +17,31 @@ class Tabs extends StatefulWidget {
 }
 
 class _TabsState extends State<Tabs> {
-    Widget _child;
+  Widget _child;
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 1,
+      length: 3,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text("Fitness"),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: "Beginner"),
+              Tab(text: "Intermediate"),
+              Tab(text: "Expert"),
+            ],
+          ),
+        ),
         body: TabBarView(
           children: <Widget>[
-            Programs(),
-
+            ProgramBeginner(),
+            ProgramIntermediate(),
+            ProgramExpert(),
+           
           ],
         ),
-        // bottomNavigationBar: TabBar(
-        //   tabs: <Widget>[
-        //     Tab(
-        //       icon: Icon(Icons.explicit, size: 26.0),
-        //     ),
-
-
-        //   ],
-        //   labelPadding: EdgeInsets.all(5.0),
-        //   labelColor: Colors.blue,
-        //   unselectedLabelColor: Colors.black12,
-        //   indicatorWeight: 0.01,
-        // ),
         bottomNavigationBar: FluidNavBar(
           icons: [
             FluidNavBarIcon(icon: Icons.settings, backgroundColor: Colors.blue, extras: {"label": "settings"}),
@@ -66,21 +66,21 @@ class _TabsState extends State<Tabs> {
     setState(() {
       switch (index) {
         case 0:
-        _child = settings();
-        Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          _child = settings();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 0)), (Route<dynamic> route) => false);
           break;
 
         case 1:
-         _child = Home();
+          _child = Home();
           Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+              MaterialPageRoute(builder: (context) => mainHome(index: 1)), (Route<dynamic> route) => false);
           break;
 
         case 2:
-       _child = userAccount();
-Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          _child = userAccount();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 2)), (Route<dynamic> route) => false);
           break;
       }
       _child = AnimatedSwitcher(

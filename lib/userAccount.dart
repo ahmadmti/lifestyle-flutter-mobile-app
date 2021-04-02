@@ -37,7 +37,7 @@ class userAccountState extends State<userAccount> {
   bool editEmail = false;
   bool editGender = false;
   var _date;
-  String _selectedCat ;
+  String _selectedGender ;
 
   var name, email, gender, dob, img;
   String nameChange;
@@ -250,7 +250,7 @@ class userAccountState extends State<userAccount> {
                               style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w400),
                             ),
                       elevation: 4,
-                      value:  _selectedCat,
+                      value:  _selectedGender,
                       items: genderMap.map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -266,7 +266,7 @@ class userAccountState extends State<userAccount> {
                       }).toList(),
                       onChanged: (newVal) {
                         setState(() {
-                          _selectedCat = newVal;
+                          _selectedGender = newVal;
                           
                         });
                       },
@@ -287,9 +287,9 @@ class userAccountState extends State<userAccount> {
                         IconButton(
                             icon: Icon(Icons.save),
                             onPressed: () {
-                              usersRef.child(FirebaseAuth.instance.currentUser.uid).child("gender").set(_date).then((_) async {
+                              usersRef.child(FirebaseAuth.instance.currentUser.uid).child("gender").set(_selectedGender).then((_) async {
                             setState(() {
-                              gender = _selectedCat;
+                              gender = _selectedGender;
                                 editGender = false;
                               Fluttertoast.showToast(
                                   msg: "Updated successfully",
