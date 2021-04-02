@@ -53,7 +53,6 @@ class _NewEntryState extends State<NewEntry> {
 
     initializeErrorListen();
 
-    print("ty ${widget.medicine.medicineType??''}");
   }
 
   @override

@@ -34,11 +34,7 @@ class medicalHomeState extends State<medicalHome> {
     super.initState();
     getData();
 
-    SharedPreferences.getInstance().then((value) {
-      setState(() {
-        bmi = value.getDouble("BMI") ?? 0.0;
-      });
-    });
+    getBMI();
   }
 
   Future<String> getData() async {
@@ -95,7 +91,7 @@ class medicalHomeState extends State<medicalHome> {
                               borderRadius: BorderRadius.all(Radius.circular(10.0)),
                             ),
                             child: InkWell(
-                              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage())),
+                              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage())).then((value) => getBMI()),
                               splashColor: Colors.white,
                               child: Center(
                                 child: Text("Calculate BMI",
@@ -117,7 +113,7 @@ class medicalHomeState extends State<medicalHome> {
                                   margin: EdgeInsets.fromLTRB(40, 0, 20, 0),
                                   child: InkWell(
                                     onTap: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => dietPlan()));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => dietPlan(bmi)));
                                     },
                                     splashColor: Colors.white,
                                     child: Center(
@@ -436,21 +432,21 @@ class medicalHomeState extends State<medicalHome> {
     setState(() {
       switch (index) {
         case 0:
-        _child = settings();
-        Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 0)), (Route<dynamic> route) => false);
+          _child = settings();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 0)), (Route<dynamic> route) => false);
           break;
 
         case 1:
-         _child = Home();
+          _child = Home();
           Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 1)), (Route<dynamic> route) => false);
+              MaterialPageRoute(builder: (context) => mainHome(index: 1)), (Route<dynamic> route) => false);
           break;
 
         case 2:
-       _child = userAccount();
-Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => mainHome(index : 2)), (Route<dynamic> route) => false);
+          _child = userAccount();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => mainHome(index: 2)), (Route<dynamic> route) => false);
           break;
       }
       _child = AnimatedSwitcher(
@@ -459,6 +455,14 @@ Navigator.of(context).pushAndRemoveUntil(
         duration: Duration(milliseconds: 500),
         child: _child,
       );
+    });
+  }
+
+  void getBMI() {
+    SharedPreferences.getInstance().then((value) {
+      setState(() {
+        bmi = value.getDouble("BMI") ?? 0.0;
+      });
     });
   }
 }

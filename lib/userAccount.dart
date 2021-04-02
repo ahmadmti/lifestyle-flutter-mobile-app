@@ -7,10 +7,23 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker_widget/enum/image_picker_widget_shape.dart';
 import 'package:image_picker_widget/image_picker_widget.dart';
+import 'package:intl/intl.dart';
 import 'package:lifestyle/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'authenticate/authenticate.dart';
 
 const String defaultAvatar =
     "https://img.pngio.com/fileblank-avatarpng-georgian-civil-code-commentary-avatarpng-400_400.png";
+
+final authenticate _auth = authenticate();
+
+var genderMap = <String>[
+  'Male',
+  'Female',
+  'Other',
+ 
+];
 
 class userAccount extends StatefulWidget {
   @override
@@ -20,10 +33,16 @@ class userAccount extends StatefulWidget {
 }
 
 class userAccountState extends State<userAccount> {
-  bool edit = false;
+  bool editName = false;
+  bool editEmail = false;
+  bool editGender = false;
+  var _date;
+  String _selectedCat ;
+
   var name, email, gender, dob, img;
   String nameChange;
   TextEditingController nameController;
+  TextEditingController emailController;
 
   @override
   void initState() {
@@ -36,6 +55,7 @@ class userAccountState extends State<userAccount> {
   @override
   Widget build(BuildContext context) {
     nameController = TextEditingController(text: name ?? '');
+    emailController = TextEditingController(text: email ?? '');
     return Center(
         child: Scaffold(
       body: ListView(
@@ -79,7 +99,7 @@ class userAccountState extends State<userAccount> {
                 ],
               ),
               title: Text("Full Name"),
-              subtitle: !edit
+              subtitle: !editName
                   ? Text(name ?? '')
                   : TextFormField(
                       style: TextStyle(
@@ -93,11 +113,11 @@ class userAccountState extends State<userAccount> {
                         border: InputBorder.none,
                       ),
                     ),
-              trailing: !edit
+              trailing: !editName
                   ? IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {
-                        edit = true;
+                        editName = true;
 
                         setState(() {});
                       })
@@ -114,33 +134,100 @@ class userAccountState extends State<userAccount> {
                                   .child("name")
                                   .set(nameController.text)
                                   .then((_) {
-                                edit = false;
+                                editName = false;
                                 name = nameController.text;
-                                setState(() {});
+                                setState(() {
+                                  Fluttertoast.showToast(
+                                      msg: "Name updated successfully",
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.CENTER,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                });
                               });
                             }),
                         IconButton(
                             icon: Icon(Icons.close),
                             onPressed: () {
-                              edit = false;
+                              editName = false;
                               setState(() {});
                             }),
                       ],
                     )),
           Divider(),
           ListTile(
-            onTap: null,
-            leading: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.mail_rounded,
-                ),
-              ],
-            ),
-            title: Text("Email Address"),
-            subtitle: Text(email ?? ''),
-          ),
+              onTap: null,
+              leading: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.mail_rounded,
+                  ),
+                ],
+              ),
+              title: Text("Email Address"),
+              subtitle: !editEmail
+                  ? Text(email ?? '')
+                  : TextFormField(
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                      autofocus: true,
+                      controller: emailController,
+                      textCapitalization: TextCapitalization.words,
+                      // onSaved: (input) => nameChange = input,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                    ),
+              trailing: !editEmail
+                  ? IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        editEmail = true;
+
+                        setState(() {});
+                      })
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                            icon: Icon(Icons.save),
+                            onPressed: () {
+                              _auth.updateEmail(this.emailController.text).then((value) {
+                                usersRef
+                                    .child(FirebaseAuth.instance.currentUser.uid)
+                                    .child("email")
+                                    .set(emailController.text)
+                                    .then((_) async {
+                                  editEmail = false;
+                                  email = emailController.text;
+                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  await prefs.setString('email', this.emailController.text);
+                                  setState(() {
+                                    Fluttertoast.showToast(
+                                        msg: "Email updated successfully",
+                                        toastLength: Toast.LENGTH_LONG,
+                                        gravity: ToastGravity.CENTER,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.red,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0);
+                                  });
+                                });
+                              });
+                            }),
+                        IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              editEmail = false;
+                              setState(() {});
+                            }),
+                      ],
+                    )),
           Divider(
               // color: Colors.black
               ),
@@ -154,23 +241,120 @@ class userAccountState extends State<userAccount> {
               ],
             ),
             title: Text("Gender"),
-            subtitle: Text(gender ?? ''),
+            subtitle: !editGender
+                  ? Text(gender ?? '')
+                  : DropdownButton<String>(
+                      iconEnabledColor: Colors.blue,
+                      hint: Text(
+                              "Select one",
+                              style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w400),
+                            ),
+                      elevation: 4,
+                      value:  _selectedCat,
+                      items: genderMap.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            "$value",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (newVal) {
+                        setState(() {
+                          _selectedCat = newVal;
+                          
+                        });
+                      },
+                    ),
+
+                    trailing: !editGender
+                  ? IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        editGender = true;
+
+                        setState(() {});
+                      })
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                            icon: Icon(Icons.save),
+                            onPressed: () {
+                              usersRef.child(FirebaseAuth.instance.currentUser.uid).child("gender").set(_date).then((_) async {
+                            setState(() {
+                              gender = _selectedCat;
+                                editGender = false;
+                              Fluttertoast.showToast(
+                                  msg: "Updated successfully",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            });
+                          });
+                            }),
+                        IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              editGender = false;
+                              setState(() {});
+                            }),
+                      ],
+                    )
           ),
           Divider(
               // color: Colors.black
               ),
           ListTile(
-            leading: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.calendar_today,
-                ),
-              ],
-            ),
-            title: Text("Date of Birth"),
-            subtitle: Text(dob ?? ''),
-          ),
+              leading: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.calendar_today,
+                  ),
+                ],
+              ),
+              title: Text("Date of Birth"),
+              subtitle: Text(dob ?? ''),
+              trailing: IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    showDatePicker(
+                      context: context,
+                      firstDate: DateTime.now(),
+                      initialDate: DateTime.now(),
+                      lastDate: DateTime(3000),
+                    ).then((value) {
+                      if (value != null && value != _date) {
+                        setState(() {
+                          _date = DateFormat('dd-MM-yyyy').format(value);
+
+                          usersRef.child(FirebaseAuth.instance.currentUser.uid).child("dob").set(_date).then((_) async {
+                            setState(() {
+                              dob = _date;
+                              Fluttertoast.showToast(
+                                  msg: "Updated successfully",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            });
+                          });
+                        });
+                      }
+                    });
+                  })),
         ],
       ),
     ));

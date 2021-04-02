@@ -82,7 +82,7 @@ class MyApp extends StatelessWidget {
           ),
           home: welcomePage(),
           routes: <String, WidgetBuilder>{
-            '/dietPlan': (BuildContext context) => new dietPlan(),
+            '/dietPlan': (BuildContext context) => new dietPlan(0.0),
             '/dietDetialScreen': (BuildContext context) => new dietDetialScreen(),
           },
         ));

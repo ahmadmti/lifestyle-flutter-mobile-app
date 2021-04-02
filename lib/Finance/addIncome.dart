@@ -78,7 +78,7 @@ class addIncomeState extends State<addIncome> {
       builder: (_) {
         return GestureDetector(
           onTap: () {},
-          child: NewTransaction(_addNewTransaction),
+          child: NewTransaction(_addNewTransaction, "income"),
           behavior: HitTestBehavior.opaque,
         );
       },

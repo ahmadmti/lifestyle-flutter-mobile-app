@@ -4,17 +4,18 @@ import 'package:intl/intl.dart';
 
 import '../widgetsExpense//adaptive_flat_button.dart';
 
- var categories = <String>[
-    'Entertainment',
-    'Food',
-    'Grocery',
-    'Health',
-  ];
+var categories = <String>[
+  'Entertainment',
+  'Food',
+  'Grocery',
+  'Health',
+];
 
 class NewTransaction extends StatefulWidget {
   final Function addTx;
+  final type;
 
-  NewTransaction(this.addTx);
+  NewTransaction(this.addTx, this.type);
 
   @override
   _NewTransactionState createState() => _NewTransactionState();
@@ -24,7 +25,7 @@ class _NewTransactionState extends State<NewTransaction> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   // DateTime _selectedDate;
-  String _selectedCat ;
+  String _selectedCat='';
   String holder;
 
   void _submitData() {
@@ -34,16 +35,15 @@ class _NewTransactionState extends State<NewTransaction> {
     final title = _titleController.text;
     final enteredAmount = double.parse(_amountController.text);
 
-    if (title.isEmpty || enteredAmount <= 0 || _selectedCat==null) {
+    if (title.isEmpty || enteredAmount <= 0 || _selectedCat == null) {
       return;
     }
 
     widget.addTx(
-      title,
-      enteredAmount,
-      // _selectedDate,
-      _selectedCat
-    );
+        title,
+        enteredAmount,
+        // _selectedDate,
+        _selectedCat);
 
     Navigator.of(context).pop();
   }
@@ -64,8 +64,6 @@ class _NewTransactionState extends State<NewTransaction> {
   //   });
   //   print('...');
   // }
-
- 
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +109,11 @@ class _NewTransactionState extends State<NewTransaction> {
               //     ],
               //   ),
               // ),
-           SizedBox(height: 10,), 
-               Container(
+              SizedBox(
+                height: 10,
+              ),
+              widget.type=="budget"?
+              Container(
                 child: Row(
                   children: <Widget>[
                     Expanded(
@@ -123,11 +124,11 @@ class _NewTransactionState extends State<NewTransaction> {
                     DropdownButton<String>(
                       iconEnabledColor: Colors.blue,
                       hint: Text(
-                              "Select one",
-                              style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w400),
-                            ),
+                        "Select one",
+                        style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w400),
+                      ),
                       elevation: 4,
-                      value:  _selectedCat,
+                      value: _selectedCat,
                       items: categories.map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -149,9 +150,11 @@ class _NewTransactionState extends State<NewTransaction> {
                     ),
                   ],
                 ),
+              ):Container(),
+              SizedBox(
+                height: 10,
               ),
-              SizedBox(height: 10,), 
-                           RaisedButton(
+              RaisedButton(
                 child: Text('Add Transaction'),
                 color: Theme.of(context).primaryColor,
                 textColor: Theme.of(context).textTheme.button.color,
