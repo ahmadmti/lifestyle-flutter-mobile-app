@@ -31,7 +31,7 @@ class _loginClassState extends State<loginClass> {
     ];
 
     return LoginFresh(
-      pathLogo: 'images/logo_icon.png',
+      pathLogo: 'assets/logo_splash.png',
       isExploreApp: false,
       functionExploreApp: () {
         // develop what they want the ExploreApp to do when the user clicks

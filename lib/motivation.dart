@@ -96,7 +96,7 @@ class motivationState extends State<motivation> {
                 Text(
                   quote,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
+                  style: TextStyle(fontSize: 22, fontStyle: FontStyle.italic),
                 ),
                 SizedBox(
                   height: 10,

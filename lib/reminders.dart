@@ -110,25 +110,25 @@ class remindersState extends State<reminders> {
                   ),
                 ),
               ),
-              Card(
-                color: Colors.red,
-                margin: EdgeInsets.all(15.0),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => BirthdayMain()));
-                  },
-                  splashColor: Colors.white,
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(Icons.alarm_add_outlined, size: 50.0, color: Colors.white),
-                        Text("Birth-Day", style: new TextStyle(fontSize: 18.0, color: Colors.white))
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              // Card(
+              //   color: Colors.red,
+              //   margin: EdgeInsets.all(15.0),
+              //   child: InkWell(
+              //     onTap: () {
+              //       Navigator.push(context, MaterialPageRoute(builder: (context) => BirthdayMain()));
+              //     },
+              //     splashColor: Colors.white,
+              //     child: Center(
+              //       child: Column(
+              //         mainAxisSize: MainAxisSize.min,
+              //         children: <Widget>[
+              //           Icon(Icons.alarm_add_outlined, size: 50.0, color: Colors.white),
+              //           Text("Birth-Day", style: new TextStyle(fontSize: 18.0, color: Colors.white))
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
               Card(
                 color: Colors.tealAccent[700],
                 margin: EdgeInsets.all(15.0),
