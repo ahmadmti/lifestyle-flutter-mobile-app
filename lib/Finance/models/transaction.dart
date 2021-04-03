@@ -13,7 +13,7 @@ class mTransaction {
     @required this.title,
     @required this.amount,
     @required this.date,
-    @required this.category,
+     this.category,
     this.totalBudget,
   });
 }

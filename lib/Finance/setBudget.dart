@@ -4,6 +4,7 @@ import 'package:fluid_bottom_nav_bar/fluid_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lifestyle/Finance/widgetsExpense/new_transaction.dart';
 import 'dart:io';
 import 'package:lifestyle/Finance/widgetsIncome/new_transaction.dart';
 import 'package:lifestyle/Finance/widgetsIncome/transaction_list.dart';
@@ -15,6 +16,14 @@ import '../mainHome.dart';
 import '../settings.dart';
 import '../userAccount.dart';
 import 'chart_budget.dart';
+
+var categories = <String>[
+  'Entertainment',
+  'Food',
+  'Grocery',
+  'Health',
+];
+
 
 class addBudget extends StatefulWidget {
   @override
@@ -90,7 +99,7 @@ class addBudgetState extends State<addBudget> {
       builder: (_) {
         return GestureDetector(
           onTap: () {},
-          child: NewTransaction(_addNewTransaction, "budget"),
+          child: NewTransaction(_addNewTransaction),
           behavior: HitTestBehavior.opaque,
         );
       },

@@ -86,8 +86,9 @@ class AddToDoState extends State<AddToDo> {
                   ),
                   onPressed: () async {
                     if (widget.todo == null) {
+                      if (nameController.text.isEmpty) return;
                       String id = DateTime.now().millisecondsSinceEpoch.toString();
-                      db.collection("ToDos").doc(firebaseUser.uid).collection("ToDos").doc().set({
+                      db.collection("ToDos").doc(firebaseUser.uid).collection("ToDos").doc(id).set({
                         "id": id,
                         "content": nameController.text,
                         "added_date": DateTime.now(),
@@ -103,7 +104,7 @@ class AddToDoState extends State<AddToDo> {
                         Navigator.pop(context);
                       });
                     } else {
-                      db.collection("ToDos").doc(firebaseUser.uid).collection("ToDos").doc(widget.todo.id).set({
+                      db.collection("ToDos").doc(firebaseUser.uid).collection("ToDos").doc(widget.todo.id).update({
                         "content": nameController.text,
                       }).then((_) {
                         Fluttertoast.showToast(

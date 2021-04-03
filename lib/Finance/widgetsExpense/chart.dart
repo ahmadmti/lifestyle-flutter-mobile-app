@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lifestyle/Finance/widgetsIncome/new_transaction.dart';
 
+import '../setBudget.dart';
 import './chart_bar.dart';
 import 'package:lifestyle/Finance/models/transaction.dart';
 

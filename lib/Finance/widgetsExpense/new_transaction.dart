@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lifestyle/Finance/widgetsIncome/new_transaction.dart';
 
+import '../setBudget.dart';
 import '../widgetsExpense//adaptive_flat_button.dart';
 
 class NewTransaction extends StatefulWidget {
