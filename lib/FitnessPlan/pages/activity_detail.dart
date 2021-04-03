@@ -191,7 +191,7 @@ class ActivityDetail extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) {
-              return videoPlay(1);
+              return videoPlay(exercise, 1);
             }),
           );
         },

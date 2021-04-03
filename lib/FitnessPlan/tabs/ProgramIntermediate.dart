@@ -12,26 +12,28 @@ import 'package:lifestyle/FitnessPlan/pages/activity_detail.dart';
 import 'package:flutter/material.dart';
 
 class ProgramIntermediate extends StatelessWidget {
-  
   final List<Exercise> exercises = [
     Exercise(
-      image: 'assets/images/image001.jpg',
+      image: 'assets/images/intermeidate_01.jpeg',
       title: 'Easy Start',
       time: '8 min',
       difficult: 'Intermediate',
+      link: 'Ba3qZjzPonI', //https://www.youtube.com/watch?v=Ba3qZjzPonI&ab_channel=BodyProject
     ),
     Exercise(
       image: 'assets/images/image002.jpg',
       title: 'Medium Start',
       time: '16 min',
       difficult: 'Intermediate',
+      link: 'Ba3qZjzPonI',
     ),
-    Exercise(
-      image: 'assets/images/image003.jpg',
-      title: 'Pro Start',
-      time: '25 min',
-      difficult: 'Intermediate ',
-    )
+    // Exercise(
+    //   image: 'assets/images/image003.jpg',
+    //   title: 'Pro Start',
+    //   time: '25 min',
+    //   difficult: 'Intermediate ',
+    //   link: 'https://www.youtube.com/watch?v=Ba3qZjzPonI&ab_channel=BodyProject',
+    // )
   ];
 
   List<Widget> generateList(BuildContext context) {
@@ -128,14 +130,12 @@ class ProgramIntermediate extends StatelessWidget {
                             image: 'assets/images/image010.jpg',
                             name: 'User Img',
                           ),
-
                         ],
                       ),
                       Section(
                         horizontalList: <Widget>[
                           DailyTip(),
                           DailyTip(),
-
                         ],
                       ),
                     ],

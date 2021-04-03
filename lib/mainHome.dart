@@ -21,6 +21,7 @@ import 'package:lifestyle/emergency/emergency.dart';
 import 'package:lifestyle/motivation.dart';
 import 'package:lifestyle/userAccount.dart';
 
+import 'Travel/widget/privacy_policy.dart';
 import 'financeHome.dart';
 import 'motivation.dart';
 
@@ -122,6 +123,7 @@ class mainHomeState extends State<mainHome> {
                 title: Text('Terms & Conditions'),
                 onTap: () {
                   Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => PrivacyPolicy("Terms & Conditions")));
                 },
               ),
               ListTile(

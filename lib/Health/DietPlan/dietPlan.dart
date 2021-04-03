@@ -232,12 +232,11 @@ class _dietPlanState extends State<dietPlan> {
                   // mainAxisSpacing: 0.0,
                 ),
                 children: [
-                  (widget.bmi > 0 && widget.bmi < 25)
+                  (widget.bmi > 0.0 && widget.bmi < 25.0)
                       ? Container(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                          
                               Container(
                                   child: GestureDetector(
                                 onTap: () {
@@ -378,12 +377,11 @@ class _dietPlanState extends State<dietPlan> {
                             ],
                           ),
                         ),
-                  (widget.bmi > 0 && widget.bmi < 25)
+                  (widget.bmi > 0.0 && widget.bmi < 25.0)
                       ? Container(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                             
                               Container(
                                   child: GestureDetector(
                                       onTap: () {
@@ -525,83 +523,78 @@ class _dietPlanState extends State<dietPlan> {
                             ],
                           ),
                         ),
-                 
-                       Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.pushReplacementNamed(
-                                          context,
-                                          RoutesUtils.dietDetialScreen,
-                                          arguments: DietPlanData(
-                                              AtkinsData.TITLE,
-                                              AtkinsData.DESC,
-                                              AtkinsData.HOWTOUSE,
-                                              AtkinsData.image1,
-                                              AtkinsData.name1,
-                                              AtkinsData.image2,
-                                              AtkinsData.name2,
-                                              AtkinsData.image3,
-                                              AtkinsData.name3),
-                                        );
-                                      },
-                                      child: Stack(children: <Widget>[
-                                        Container(
-                                          width: (MediaQuery.of(context).size.width / 2) - DimensionUtils.margin_large,
-                                          height: DimensionUtils.img_size_dietplan_item_height * 1.5,
-                                          padding: EdgeInsets.fromLTRB(
-                                              DimensionUtils.margin_large,
-                                              DimensionUtils.margin_small,
-                                              DimensionUtils.margin_large,
-                                              DimensionUtils.margin_small),
-                                          decoration: new BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.all(Radius.circular(DimensionUtils.margin_large)),
-                                            image: new DecorationImage(
-                                              image: new AssetImage("images/ic_atkins.jpg"),
-                                              fit: BoxFit.cover,
-                                            ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                            child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pushReplacementNamed(
+                                    context,
+                                    RoutesUtils.dietDetialScreen,
+                                    arguments: DietPlanData(
+                                        AtkinsData.TITLE,
+                                        AtkinsData.DESC,
+                                        AtkinsData.HOWTOUSE,
+                                        AtkinsData.image1,
+                                        AtkinsData.name1,
+                                        AtkinsData.image2,
+                                        AtkinsData.name2,
+                                        AtkinsData.image3,
+                                        AtkinsData.name3),
+                                  );
+                                },
+                                child: Stack(children: <Widget>[
+                                  Container(
+                                    width: (MediaQuery.of(context).size.width / 2) - DimensionUtils.margin_large,
+                                    height: DimensionUtils.img_size_dietplan_item_height * 1.5,
+                                    padding: EdgeInsets.fromLTRB(
+                                        DimensionUtils.margin_large,
+                                        DimensionUtils.margin_small,
+                                        DimensionUtils.margin_large,
+                                        DimensionUtils.margin_small),
+                                    decoration: new BoxDecoration(
+                                      borderRadius: BorderRadius.all(Radius.circular(DimensionUtils.margin_large)),
+                                      image: new DecorationImage(
+                                        image: new AssetImage("images/ic_atkins.jpg"),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      "",
+                                      style: style.copyWith(
+                                        color: ColorUtils.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: (MediaQuery.of(context).size.width / 2) - DimensionUtils.margin_large,
+                                    height: DimensionUtils.img_size_dietplan_item_height * 1.5,
+                                    padding: EdgeInsets.fromLTRB(
+                                        DimensionUtils.margin_large,
+                                        DimensionUtils.margin_small,
+                                        DimensionUtils.margin_large,
+                                        DimensionUtils.margin_small),
+                                    decoration: new BoxDecoration(
+                                      borderRadius: BorderRadius.all(Radius.circular(DimensionUtils.margin_large)),
+                                      color: ColorUtils.black.withOpacity(0.4),
+                                    ),
+                                    child: Padding(
+                                        padding: EdgeInsets.only(top: DimensionUtils.margin_large),
+                                        child: Text(
+                                          "Low carbs - Atkins",
+                                          style: style.copyWith(
+                                            color: ColorUtils.light_white,
                                           ),
-                                          child: Text(
-                                            "",
-                                            style: style.copyWith(
-                                              color: ColorUtils.white,
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: (MediaQuery.of(context).size.width / 2) - DimensionUtils.margin_large,
-                                          height: DimensionUtils.img_size_dietplan_item_height * 1.5,
-                                          padding: EdgeInsets.fromLTRB(
-                                              DimensionUtils.margin_large,
-                                              DimensionUtils.margin_small,
-                                              DimensionUtils.margin_large,
-                                              DimensionUtils.margin_small),
-                                          decoration: new BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.all(Radius.circular(DimensionUtils.margin_large)),
-                                            color: ColorUtils.black.withOpacity(0.4),
-                                          ),
-                                          child: Padding(
-                                              padding: EdgeInsets.only(top: DimensionUtils.margin_large),
-                                              child: Text(
-                                                "Low carbs - Atkins",
-                                                style: style.copyWith(
-                                                  color: ColorUtils.light_white,
-                                                ),
-                                              )),
-                                        )
-                                      ]))),
-                            ],
-                          ),
-                        ),
-
-                         (widget.bmi > 0 && widget.bmi < 25)
-                      ? 
-                      Container(
+                                        )),
+                                  )
+                                ]))),
+                      ],
+                    ),
+                  ),
+                  (widget.bmi > 0.0 && widget.bmi < 25.0)
+                      ? Container(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
@@ -659,8 +652,8 @@ class _dietPlanState extends State<dietPlan> {
                                       ]))),
                             ],
                           ),
-                        ): Container(),
-                      
+                        )
+                      : Container(),
                 ],
               ),
             ),

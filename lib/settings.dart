@@ -7,13 +7,12 @@ import 'package:lifestyle/userAccount.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'Travel/widget/custom_dialog_box.dart';
+import 'Travel/widget/privacy_policy.dart';
 import 'authenticate/authenticate.dart';
 import 'login/Login.dart';
 
 final authenticate _auth = authenticate();
 
-var url =
-    "https://faq.whatsapp.com/general/security-and-privacy/were-updating-our-terms-and-privacy-policy?campaign_id=12074681949&extra_1=s%7Cc%7C491604076779%7Cb%7C%2Bwhatsapp%20%2Bprivacy%7C&placement=&creative=491604076779&keyword=%2Bwhatsapp%20%2Bprivacy&partner_id=googlesem&extra_2=campaignid%3D12074681949%26adgroupid%3D113184190701%26matchtype%3Db%26network%3Dg%26source%3Dnotmobile%26search_or_content%3Ds%26device%3Dc%26devicemodel%3D%26adposition%3D%26target%3D%26targetid%3Dkwd-374388685640%26loc_physical_ms%3D1011082%26loc_interest_ms%3D%26feeditemid%3D%26param1%3D%26param2%3D";
 
 class settings extends StatefulWidget {
   @override
@@ -30,7 +29,6 @@ class settingsState extends State<settings> {
   Widget build(BuildContext context) {
     return Center(
         child: Scaffold(
-     
       body: ListView(
         children: [
           SizedBox(
@@ -146,7 +144,7 @@ class settingsState extends State<settings> {
                   ),
                 ),
                 InkWell(
-                  onTap: () => launchBrowser(url),
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PrivacyPolicy("Privacy Policy"))),
                   child: Container(
                     width: double.infinity,
                     child: Padding(
@@ -159,7 +157,7 @@ class settingsState extends State<settings> {
                 ),
                 Divider(),
                 InkWell(
-                  onTap: () => launchBrowser(url),
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PrivacyPolicy("Terms & Conditions"))),
                   child: Container(
                     width: double.infinity,
                     child: Padding(
@@ -172,7 +170,7 @@ class settingsState extends State<settings> {
                 ),
                 Divider(),
                 InkWell(
-                  onTap: () => launchBrowser(url),
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PrivacyPolicy("Disclaimer"))),
                   child: Container(
                     width: double.infinity,
                     child: Padding(

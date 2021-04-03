@@ -12,25 +12,27 @@ import 'package:lifestyle/FitnessPlan/pages/activity_detail.dart';
 import 'package:flutter/material.dart';
 
 class ProgramExpert extends StatelessWidget {
-  
   final List<Exercise> exercises = [
     Exercise(
-      image: 'assets/images/image001.jpg',
+      image: 'assets/images/expert_01.jpeg',
       title: 'Easy Start',
       time: '8 min',
       difficult: 'Expert',
+      link: 'yplP5cLuyf4', //https://www.youtube.com/watch?v=yplP5cLuyf4&ab_channel=BodyProject
     ),
     Exercise(
-      image: 'assets/images/image002.jpg',
+      image: 'assets/images/expert_02.jpg',
       title: 'Medium Start',
       time: '16 min',
       difficult: 'Expert',
+      link: 'yplP5cLuyf4',
     ),
     Exercise(
       image: 'assets/images/image003.jpg',
       title: 'Pro Start',
       time: '25 min',
       difficult: 'Expert ',
+      link: 'yplP5cLuyf4',
     )
   ];
 
@@ -128,14 +130,12 @@ class ProgramExpert extends StatelessWidget {
                             image: 'assets/images/image010.jpg',
                             name: 'User Img',
                           ),
-
                         ],
                       ),
                       Section(
                         horizontalList: <Widget>[
                           DailyTip(),
                           DailyTip(),
-
                         ],
                       ),
                     ],

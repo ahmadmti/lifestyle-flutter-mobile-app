@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lifestyle/FitnessPlan/pages/Video.dart';
+
 class MainCardPrograms extends StatelessWidget {
   final Map<String, String> cardInfo = {
     'title': 'For You',
@@ -14,11 +15,8 @@ class MainCardPrograms extends StatelessWidget {
       child: Align(
         alignment: Alignment.bottomCenter,
         child: InkWell(
-          onTap: (){
-
-
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => videoPlay(0)));
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => videoPlay(null, 0)));
           },
           child: Container(
             height: 60.0,

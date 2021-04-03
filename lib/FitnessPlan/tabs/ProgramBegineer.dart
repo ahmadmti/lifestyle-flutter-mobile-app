@@ -19,19 +19,20 @@ class ProgramBeginner extends StatelessWidget {
       title: 'Easy Start',
       time: '8 min',
       difficult: 'Beginner',
+      link: 'L_xrDAtykMI', //https://youtu.be/L_xrDAtykMI
     ),
-    Exercise(
-      image: 'assets/images/image002.jpg',
-      title: 'Medium Start',
-      time: '16 min',
-      difficult: 'Beginner',
-    ),
-    Exercise(
-      image: 'assets/images/image003.jpg',
-      title: 'Pro Start',
-      time: '25 min',
-      difficult: 'Beginner ',
-    )
+    // Exercise(
+    //   image: 'assets/images/image002.jpg',
+    //   title: 'Medium Start',
+    //   time: '16 min',
+    //   difficult: 'Beginner',
+    // ),
+    // Exercise(
+    //   image: 'assets/images/image003.jpg',
+    //   title: 'Pro Start',
+    //   time: '25 min',
+    //   difficult: 'Beginner ',
+    // )
   ];
 
   List<Widget> generateList(BuildContext context) {
@@ -39,6 +40,7 @@ class ProgramBeginner extends StatelessWidget {
     int count = 0;
     exercises.forEach((exercise) {
       Widget element = Container(
+        
         margin: EdgeInsets.only(right: 20.0),
         child: GestureDetector(
           child: ImageCardWithBasicFooter(
