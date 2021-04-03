@@ -35,7 +35,6 @@ Future<void> main() async {
     settings,
   );
 
-  print(FirebaseAuth.instance.currentUser);
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(new MyApp());
@@ -53,6 +52,7 @@ void url_launcher(String Url) async {
 DatabaseReference usersRef = FirebaseDatabase.instance.reference().child("users");
 
 class MyApp extends StatelessWidget {
+
   static FlutterLocalNotificationsPlugin notifications = FlutterLocalNotificationsPlugin();
   // This widget is the root of your application.
   @override

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fluid_bottom_nav_bar/fluid_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lifestyle/Motivation/MainPage.dart';
 import 'package:lifestyle/Shoping/Home.dart';
 import 'package:lifestyle/Travel/widget/home_screen.dart';
@@ -20,6 +21,7 @@ import 'package:lifestyle/reminders.dart';
 import 'package:lifestyle/emergency/emergency.dart';
 import 'package:lifestyle/motivation.dart';
 import 'package:lifestyle/userAccount.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Travel/widget/privacy_policy.dart';
 import 'financeHome.dart';
@@ -40,6 +42,7 @@ class mainHomeState extends State<mainHome> {
   int a = 0;
   final PageController ctrl = PageController(viewportFraction: 0.8);
   Widget _child;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   String activeTag = 'Finance';
 
@@ -73,6 +76,46 @@ class mainHomeState extends State<mainHome> {
         });
       }
     });
+
+    SharedPreferences.getInstance().then((value) {
+      bool setOnce = value.getBool("setOnce") ?? false;
+
+      if (!setOnce) scheduledNotifyReminder(1, "Smoking", "Smocking is Injurious to Health");
+    });
+  }
+
+  Future scheduledNotifyReminder(id, title, body) async {
+    var initializationSettingsAndroid = new AndroidInitializationSettings('logo');
+    var initializationSettingsIOs = IOSInitializationSettings();
+    var initSetttings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOs);
+    flutterLocalNotificationsPlugin.initialize(initSetttings, onSelectNotification: selectNotification);
+
+    var android =
+        AndroidNotificationDetails('$id', '$title', 'description', priority: Priority.high, importance: Importance.max);
+    var iOS = IOSNotificationDetails();
+    var platform = new NotificationDetails(android: android, iOS: iOS);
+    await flutterLocalNotificationsPlugin.periodicallyShow(
+      id,
+      '$title',
+      '$body',
+      RepeatInterval.daily,
+      platform,
+      androidAllowWhileIdle: true,
+    );
+
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setBool("setOnce", true);
+
+  }
+
+  Future selectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: $payload');
+    }
+    // await Navigator.push(
+    //   context,
+    //   MaterialPageRoute<void>(builder: (context) => main()),
+    // );
   }
 
   Future<String> getData() async {

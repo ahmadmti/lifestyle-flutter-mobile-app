@@ -253,12 +253,12 @@ class _FligthScreenState extends State<FligthScreen> {
                         );
                       } else {
                         return Center(
-                          child: Text("No Flight"),
+                          child: Text("No flight available"),
                         );
                       }
                     } else {
                       return Center(
-                        child: Text("No Flight"),
+                          child: Text("No flight available"),
                       );
                     }
                   });
